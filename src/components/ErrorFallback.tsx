@@ -2,11 +2,13 @@ import { Button } from "@/components/ui/button";
 import { AlertCircle } from "lucide-react";
 
 interface ErrorFallbackProps {
-    error: Error;
-    resetErrorBoundary: () => void;
+    error: unknown;
+    componentStack: string;
+    eventId: string;
+    resetError: () => void;
 }
 
-export function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
+export function ErrorFallback({ error, resetError }: ErrorFallbackProps) {
     return (
         <div className="flex h-screen w-full flex-col items-center justify-center gap-4 bg-background p-4 text-foreground">
             <div className="flex flex-col items-center gap-2 text-center">
@@ -20,12 +22,14 @@ export function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
 
             {import.meta.env.DEV && (
                 <div className="mt-4 w-full max-w-[600px] rounded-md bg-muted p-4 overflow-auto max-h-[200px] text-xs font-mono">
-                    <p className="font-bold text-destructive mb-2">{error.message}</p>
-                    <pre>{error.stack}</pre>
+                    <p className="font-bold text-destructive mb-2">
+                        {error instanceof Error ? error.message : String(error)}
+                    </p>
+                    <pre>{error instanceof Error ? error.stack : JSON.stringify(error, null, 2)}</pre>
                 </div>
             )}
 
-            <Button onClick={resetErrorBoundary} variant="default" className="mt-4">
+            <Button onClick={resetError} variant="default" className="mt-4">
                 Intentar de nuevo
             </Button>
         </div>

@@ -7,6 +7,10 @@ import { queryClient } from './lib/queryClient.ts'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { GlobalErrorBoundary } from './components/GlobalErrorBoundary'
+import { initSentry } from './lib/sentry'
+
+// Initialize Sentry before rendering
+initSentry()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
