@@ -34,7 +34,7 @@ export default function MovementsWorkshopForm() {
     null
   );
   const [selected, setSelected] = useState<string | null>(null);
-  const [itemName, setItemName] = useState<string>("");
+
 
   const { handleCreateTechnicalMovement, isProcessing: isTechnicalProcessing } = useTechnicalMovements();
 
@@ -79,7 +79,7 @@ export default function MovementsWorkshopForm() {
     };
 
     await handleCreateTechnicalMovement(movementData);
-    
+
     // Reset form (adjust as needed)
     setOrderNumber("");
     setCountItems(1);
@@ -110,7 +110,7 @@ export default function MovementsWorkshopForm() {
                 <Label htmlFor="password">Repuesto</Label>
               </div>
               <AutocompleteInput
-                onSelect={setItemName}
+                onSelect={() => { }}
                 selected={selected}
                 setSelected={setSelected}
               />

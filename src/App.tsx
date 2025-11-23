@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Inventory from "./pages/Inventory";
 import NotFound from "./pages/NotFound";
 import "./App.css";
@@ -21,45 +21,64 @@ import {
 import InventoryPage from "./features/inventory/components/InventoryPage";
 import RecordsPage from "./features/records/components/records-page";
 import { Toaster } from "./components/ui/sonner";
+import { useUserStore } from "@/store/useUserStore";
+import { LoginPage } from "./features/login/components/login-page";
 
 function App() {
+  const isAuthenticated = useUserStore((state) => state.isAuthenticated);
+
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2">
-            <div className="flex items-center gap-2 px-4">
-              <SidebarTrigger className="-ml-1" />
-              <Separator
-                orientation="vertical"
-                className="mr-2 data-[orientation=vertical]:h-4"
-              />
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="#">
-                      Building Your Application
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="hidden md:block" />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
-          </header>
-          <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            <Routes>
-              <Route path="/" element={<InventoryPage />} />
-              <Route path="/registros" element={<RecordsPage />} />
-              <Route path="/inventario" element={<Inventory />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
+      <Routes>
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
+        />
+        <Route
+          path="/*"
+          element={
+            isAuthenticated ? (
+              <SidebarProvider>
+                <AppSidebar />
+                <SidebarInset>
+                  <header className="flex h-16 shrink-0 items-center gap-2">
+                    <div className="flex items-center gap-2 px-4">
+                      <SidebarTrigger className="-ml-1" />
+                      <Separator
+                        orientation="vertical"
+                        className="mr-2 data-[orientation=vertical]:h-4"
+                      />
+                      <Breadcrumb>
+                        <BreadcrumbList>
+                          <BreadcrumbItem className="hidden md:block">
+                            <BreadcrumbLink href="#">
+                              Building Your Application
+                            </BreadcrumbLink>
+                          </BreadcrumbItem>
+                          <BreadcrumbSeparator className="hidden md:block" />
+                          <BreadcrumbItem>
+                            <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                          </BreadcrumbItem>
+                        </BreadcrumbList>
+                      </Breadcrumb>
+                    </div>
+                  </header>
+                  <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+                    <Routes>
+                      <Route path="/" element={<InventoryPage />} />
+                      <Route path="/registros" element={<RecordsPage />} />
+                      <Route path="/inventario" element={<Inventory />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </div>
+                </SidebarInset>
+              </SidebarProvider>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+      </Routes>
       <Toaster richColors />
     </ThemeProvider>
   );
@@ -68,42 +87,5 @@ function App() {
 export default App;
 
 /**
- * <div className="min-h-screen">
-      <nav className="shadow-sm border-b">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="text-xl font-bold text-gray-800">
-              Minca Inventory
-            </Link>
-            <div className="flex gap-6">
-              <Link
-                to="/"
-                className="text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                Inicio
-              </Link>
-              <Link
-                to="/productos"
-                className="text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                Productos
-              </Link>
-              <Link
-                to="/inventario"
-                className="text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                Inventario
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/productos" element={<Products />} />
-        <Route path="/inventario" element={<Inventory />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </div>
+ * 
  */
