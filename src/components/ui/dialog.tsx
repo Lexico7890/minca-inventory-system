@@ -20,7 +20,9 @@ const DialogOverlay = React.forwardRef<
         <DialogPrimitive.Overlay
             ref={ref}
             className={cn(
-                "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+                // FONDO OSCURO: Usamos black/80 para "apagar" el fondo casi por completo.
+                // Esto es crucial para que el modal gris (popover) resalte.
+                "fixed inset-0 z-49 bg-black/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
                 className
             )}
             {...props}
