@@ -27,6 +27,8 @@ import { LoginPage } from "./features/login/components/login-page";
 import { useSupabaseAuthListener } from "./hooks/useSupabaseAuthListener";
 import { UpdatePasswordPage } from "./features/login/components/update-password-page";
 
+import { LocationSelector } from "./components/common/LocationSelector";
+
 function App() {
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
   useSupabaseAuthListener();
@@ -47,6 +49,7 @@ function App() {
           element={
             isAuthenticated ? (
               <SidebarProvider>
+                <LocationSelector />
                 <AppSidebar />
                 <SidebarInset>
                   <header className="flex h-16 shrink-0 items-center gap-2">
