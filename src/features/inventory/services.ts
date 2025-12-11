@@ -125,14 +125,15 @@ export async function searchInventoryItems(query: string): Promise<InventoryItem
 /**
  * Search repuestos by query
  */
-export async function searchRepuestos(query: string): Promise<InventoryItem[]> {
+export async function searchRepuestos(query: string, id_localizacion: string): Promise<InventoryItem[]> {
   if (!query.trim()) {
     return [];
   }
 
   const { data, error } = await supabase
-    .from('repuestos')
+    .from('v_inventario_completo')
     .select('*')
+    .eq('id_localizacion', id_localizacion)
     .or(`nombre.ilike.%${query}%,referencia.ilike.%${query}%`)
     .limit(50);
 
