@@ -2,10 +2,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getListMovements, getTechniciansByLocation, markMovementAsDownloaded } from "./services";
 
 // Hook to search inventory items (for autocomplete)
-export function useSearchMovements() {
+export function useSearchMovements(technicianId?: string) {
   return useQuery({
-    queryKey: ["technical-movements"],
-    queryFn: () => getListMovements(),
+    queryKey: ["technical-movements", technicianId],
+    queryFn: () => getListMovements(technicianId),
     staleTime: 1000 * 60 * 5, // 5 minutes
     refetchOnWindowFocus: false,
     refetchOnReconnect: true,

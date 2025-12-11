@@ -11,6 +11,7 @@ import { useSearchMovements, useMarkMovementAsDownloaded } from "../queries";
 import { Loader2, Edit, Eye, Download } from "lucide-react";
 import { ActionMenu } from "@/components/common/ActionMenu";
 import { useRecordsStore } from "../store/useRecordsStore";
+import { useUserStore } from "@/store/useUserStore";
 import { useState } from "react";
 import {
     AlertDialog,
@@ -25,7 +26,15 @@ import {
 import { cn } from "@/lib/utils";
 
 export default function ListMovements() {
-    const { data, isLoading, isError, error } = useSearchMovements();
+    const { sessionData, hasRole } = useUserStore();
+
+    // Determine if we need to filter by technician
+    // If user is 'tecnico', we pass their ID. Otherwise undefined.
+    // Note: sessionData might be null initially but useUserStore persists so it should be available if authenticated.
+    const isTechnician = hasRole('tecnico');
+    const technicianId = isTechnician ? sessionData?.user.id : undefined;
+
+    const { data, isLoading, isError, error } = useSearchMovements(technicianId);
     const { setMovementToEdit } = useRecordsStore();
     const markAsDownloaded = useMarkMovementAsDownloaded();
     const [downloadConfirmId, setDownloadConfirmId] = useState<string | null>(null);

@@ -1,12 +1,18 @@
 import { supabase } from "@/lib/supabase";
 import type { InventoryItem } from "@/types/common-types";
 
-export async function getListMovements() {
-    const { data, error } = await supabase
-  .from('v_movimientos_detallados') // <--- Usas la vista
-  .select('*')
-    .order('fecha', { ascending: false })
-    .limit(10);
+export async function getListMovements(technicianId?: string) {
+    let query = supabase
+        .from('v_movimientos_detallados')
+        .select('*')
+        .order('fecha', { ascending: false })
+        .limit(10);
+
+    if (technicianId) {
+        query = query.eq('id_tecnico_asignado', technicianId);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
         console.error('Error searching inventory:', error);
