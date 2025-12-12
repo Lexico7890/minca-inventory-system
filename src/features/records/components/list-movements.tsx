@@ -26,21 +26,14 @@ import {
 import { cn } from "@/lib/utils";
 
 export default function ListMovements() {
-    const { sessionData, hasRole } = useUserStore();
+    const { sessionData, hasRole, checkMenuPermission } = useUserStore();
 
     // Determine if we need to filter by technician
     const isTechnician = hasRole('tecnico');
     const technicianId = isTechnician ? sessionData?.user.id : undefined;
 
-    // Debug logging
-    useEffect(() => {
-        console.log("=== ListMovements Debug ===");
-        console.log("Session Data:", sessionData);
-        console.log("User Role Object:", sessionData?.user?.role);
-        console.log("Is Technician (hasRole 'tecnico'):", isTechnician);
-        console.log("Technician ID Filter:", technicianId);
-        console.log("===========================");
-    }, [sessionData, isTechnician, technicianId]);
+    // Check permission for editing
+    const canEdit = checkMenuPermission('registros', 'edit_register');
 
     const { data, isLoading, isError, error } = useSearchMovements(technicianId);
     const { setMovementToEdit } = useRecordsStore();
@@ -152,7 +145,8 @@ export default function ListMovements() {
                                                 concepto: movement.concepto,
                                                 cantidad: movement.cantidad,
                                                 numero_orden: movement.numero_orden
-                                            })
+                                            }),
+                                            disabled: !canEdit
                                         },
                                         {
                                             label: "Descargar",

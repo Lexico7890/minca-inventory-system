@@ -87,11 +87,13 @@ interface UserStore {
   setSessionData: (data: SessionData | null) => void;
   setCurrentLocation: (location: UserLocation | null) => void;
   clearUser: () => void;
-  // hasPermission genérico se mantiene por compatibilidad, pero lo ideal es usar checkMenuPermission
+  // hasPermission genérico se mantiene por compatibilidad
   hasPermission: (permission: string) => boolean;
   hasRole: (roleName: string) => boolean;
-  // Nuevo helper específico para rutas
+  // Helper específico para rutas
   canViewRoute: (routeKey: string) => boolean;
+  // Helper genérico para permisos de menú
+  checkMenuPermission: (menuKey: string, permissionKey: string) => boolean;
 }
 
 export const useUserStore = create<UserStore>()(
@@ -117,7 +119,6 @@ export const useUserStore = create<UserStore>()(
       }),
       
       hasPermission: () => {
-        // Implementación placeholder anterior, debe ser refinada si se usa
         return true;
       },
       
@@ -138,6 +139,22 @@ export const useUserStore = create<UserStore>()(
 
         const routePermission = menuPermissions[routeKey];
         return routePermission?.show_view === true;
+      },
+
+      checkMenuPermission: (menuKey: string, permissionKey: string) => {
+        const state = get();
+        const menuPermissions = state.sessionData?.user.role?.permissions?.menu;
+
+        if (!menuPermissions) {
+          return false;
+        }
+
+        const menuSection = menuPermissions[menuKey];
+        if (!menuSection) {
+            return false;
+        }
+
+        return menuSection[permissionKey] === true;
       }
     }),
     {
