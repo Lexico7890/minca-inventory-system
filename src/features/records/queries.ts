@@ -1,11 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
-import { getListMovements, getTechniciansByLocation } from "./services";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
+import { getListMovements, getTechniciansByLocation, markMovementAsDownloaded } from "./services";
+
+interface MovementFilters {
+    page: number;
+    pageSize: number;
+    technicianId?: string;
+    startDate?: string;
+    endDate?: string;
+    orderNumber?: string;
+    concept?: string;
+    downloaded?: string;
+}
 
 // Hook to search inventory items (for autocomplete)
-export function useSearchMovements() {
+export function useSearchMovements(filters: MovementFilters) {
   return useQuery({
-    queryKey: ["technical-movements"],
-    queryFn: () => getListMovements(),
+    queryKey: ["technical-movements", filters],
+    queryFn: () => getListMovements(filters),
+    placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 5, // 5 minutes
     refetchOnWindowFocus: false,
     refetchOnReconnect: true,
@@ -19,5 +31,15 @@ export function useTechnicians(locationId: string | undefined) {
         queryFn: () => getTechniciansByLocation(locationId!),
         enabled: !!locationId,
         staleTime: 1000 * 60 * 10, // 10 minutes
+    });
+}
+
+export function useMarkMovementAsDownloaded() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id: string) => markMovementAsDownloaded(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["technical-movements"] });
+        },
     });
 }
