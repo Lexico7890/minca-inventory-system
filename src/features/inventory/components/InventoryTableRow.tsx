@@ -1,15 +1,27 @@
 import { Badge } from "@/components/ui/badge";
 import { TableCell, TableRow } from "@/components/ui/table";
 import type { InventoryItem } from "../types";
-import { PopoverOptions } from "./PopoverOptions";
+import { InventoryEditSheet } from "./InventoryEditSheet";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Pencil } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface InventoryTableRowProps {
     item: InventoryItem;
 }
 
 export function InventoryTableRow({ item }: InventoryTableRowProps) {
+    const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
+    const queryClient = useQueryClient();
+
     // Determine if stock is low
     const isLowStock = item.stock_actual < item.cantidad_minima;
+
+    const handleSaveSuccess = () => {
+        // Invalidate the inventory query to refresh the list
+        queryClient.invalidateQueries({ queryKey: ['inventory'] });
+    };
 
     return (
         <TableRow>
@@ -36,7 +48,21 @@ export function InventoryTableRow({ item }: InventoryTableRowProps) {
                 )}
             </TableCell>
             <TableCell>
-                <PopoverOptions item={item} />
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => setIsEditSheetOpen(true)}
+                >
+                    <Pencil className="h-4 w-4" />
+                </Button>
+
+                <InventoryEditSheet
+                    item={item}
+                    open={isEditSheetOpen}
+                    onOpenChange={setIsEditSheetOpen}
+                    onSaveSuccess={handleSaveSuccess}
+                />
             </TableCell>
         </TableRow>
     );

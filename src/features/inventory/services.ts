@@ -100,6 +100,42 @@ export async function createInventoryItem(data: { id_repuesto: string, id_locali
 }
 
 /**
+ * Update inventory item (table: inventario)
+ */
+export async function updateInventoryItem(
+  id_inventario: number,
+  data: { cantidad?: number, posicion?: string, cantidad_minima?: number }
+) {
+  const { error } = await supabase
+    .from('inventario')
+    .update(data)
+    .eq('id_inventario', id_inventario);
+
+  if (error) {
+    console.error('Error updating inventory item:', error);
+    throw new Error(error.message);
+  }
+}
+
+/**
+ * Update repuesto item (table: repuestos)
+ */
+export async function updateRepuesto(
+  id_repuesto: string,
+  data: { descontinuado?: boolean, tipo?: string, fecha_estimada?: string | null }
+) {
+  const { error } = await supabase
+    .from('repuestos')
+    .update(data)
+    .eq('id_repuesto', id_repuesto);
+
+  if (error) {
+    console.error('Error updating repuesto:', error);
+    throw new Error(error.message);
+  }
+}
+
+/**
  * Search inventory items by query
  */
 export async function searchInventoryItems(query: string): Promise<InventoryItem[]> {
