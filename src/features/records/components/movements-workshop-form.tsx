@@ -170,7 +170,7 @@ export default function MovementsWorkshopForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={submitForm}>
-          <div className="md:grid md:grid-cols-5 md:gap-4 flex flex-col gap-4">
+          <div className="md:grid md:grid-cols-5 md:gap-4 flex flex-col gap-2 sm:gap-4">
             <div className="grid gap-2 col-span-5">
               <Label htmlFor="technician">Técnico</Label>
               <Select value={selectedTechnicianId} onValueChange={setSelectedTechnicianId}>
