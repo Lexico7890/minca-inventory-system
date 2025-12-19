@@ -4,7 +4,7 @@ import type { Destination, CartItem } from '../types';
 export async function getLocations(): Promise<Destination[]> {
   const { data, error } = await supabase
     .from('localizacion')
-    .select('id_localizacion, nombre');
+    .select('id_localizacion, nombre, telefono');
 
   if (error) {
     console.error('Error fetching locations:', error);
