@@ -1,5 +1,6 @@
 import ListMovements from "./list-movements";
 import MovementsWorkshopForm from "./movements-workshop-form";
+import GuaranteesForm from "./guarantees-form";
 import { useUserStore } from "@/store/useUserStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -33,8 +34,7 @@ export default function RecordsPage() {
 
         <TabsContent value="garantias">
           <div className="mt-4">
-            <h2 className="text-xl font-semibold mb-4">Formulario Garantías</h2>
-            {/* Future guarantee form will go here */}
+            <GuaranteesForm />
           </div>
         </TabsContent>
       </Tabs>
