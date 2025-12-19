@@ -25,12 +25,21 @@ import { toast } from "sonner";
 import { sendWhatsAppNotification } from "@/lib/utils";
 
 export default function RequestsCreatedPage() {
-  const { selectedItems, destinations, setDestinations, removeItem, clearItems } = useRequestsStore();
-  const { sessionData, currentLocation } = useUserStore();
+  const {
+    cartItems,
+    destinations,
+    setDestinations,
+    loadCart,
+    removeItemFromCart,
+    clearCartAfterSubmit
+  } = useRequestsStore();
+
+  const { sessionData, currentLocation, hasRole } = useUserStore();
   const [selectedDestination, setSelectedDestination] = useState<string>("");
   const [comment, setComment] = useState("");
   const [history, setHistory] = useState<RequestHistoryItem[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isTechnician = hasRole('tecnico');
 
   useEffect(() => {
     async function loadLocations() {
@@ -56,12 +65,19 @@ export default function RequestsCreatedPage() {
     loadHistory();
   }, []);
 
+  // Load cart when location is available
+  useEffect(() => {
+    if (currentLocation?.id_localizacion) {
+      loadCart(String(currentLocation.id_localizacion));
+    }
+  }, [currentLocation, loadCart]);
+
   const handleSubmit = async () => {
     if (!selectedDestination) {
       toast.error("Seleccione un destino");
       return;
     }
-    if (selectedItems.length === 0) {
+    if (cartItems.length === 0) {
       toast.error("Agregue repuestos a la solicitud");
       return;
     }
@@ -76,21 +92,29 @@ export default function RequestsCreatedPage() {
 
     setIsSubmitting(true);
     try {
+      // 1. Create Request
       await createRequest({
-        id_localizacion_origen: currentLocation.id_localizacion,
+        id_localizacion_origen: String(currentLocation.id_localizacion),
         id_localizacion_destino: selectedDestination,
         id_usuario_solicitante: sessionData.user.id,
         observaciones_generales: comment,
-        items: selectedItems.map(item => ({ id_repuesto: item.id })),
+        items: cartItems.map(item => ({
+          id_repuesto: item.id_repuesto,
+          cantidad: item.cantidad
+        })),
       });
 
       toast.success("Solicitud enviada exitosamente", { icon: '✅', duration: 5000 });
 
-      // Reload history
+      // 2. Clear Cart Items from DB
+      const cartIds = cartItems.map(item => item.id_item_carrito);
+      await clearCartAfterSubmit(cartIds);
+
+      // 3. Reload History
       const historyData = await getRequestHistory();
       setHistory(historyData);
 
-      // Clear form
+      // 4. Reset Form
       setComment("");
       setSelectedDestination("");
       clearItems();
@@ -129,60 +153,72 @@ export default function RequestsCreatedPage() {
           <CardTitle>Nueva Solicitud</CardTitle>
         </CardHeader>
         <CardContent className="flex-1 flex flex-col gap-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Destino</label>
-            <Select onValueChange={setSelectedDestination} value={selectedDestination}>
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccione taller destino" />
-              </SelectTrigger>
-              <SelectContent>
-                {destinations.map((dest) => (
-                  <SelectItem key={dest.id_localizacion} value={String(dest.id_localizacion)}>
-                    {dest.nombre}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {!isTechnician && (
+            <>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Destino</label>
+                <Select onValueChange={setSelectedDestination} value={selectedDestination}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccione taller destino" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {destinations.map((dest) => (
+                      <SelectItem key={dest.id_localizacion} value={String(dest.id_localizacion)}>
+                        {dest.nombre}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Comentarios</label>
-            <Textarea
-              placeholder="Agregue un comentario..."
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
-          </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Comentarios</label>
+                <Textarea
+                  placeholder="Agregue un comentario..."
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                />
+              </div>
+            </>
+          )}
 
           <div className="flex-1 overflow-auto border rounded-md p-2">
-            <h3 className="font-medium mb-2">Repuestos Seleccionados</h3>
-            {selectedItems.length === 0 ? (
-              <p className="text-muted-foreground text-sm">No hay repuestos seleccionados.</p>
+            <h3 className="font-medium mb-2">Repuestos Seleccionados (Carrito Taller)</h3>
+            {cartItems.length === 0 ? (
+              <p className="text-muted-foreground text-sm">No hay repuestos en el carrito de este taller.</p>
             ) : (
               <ul className="space-y-2">
-                {selectedItems.map((item) => (
-                  <li key={item.id} className="flex items-center justify-between p-2 bg-accent/50 rounded-md">
+                {cartItems.map((item) => (
+                  <li key={item.id_item_carrito} className="flex items-center justify-between p-2 bg-accent/50 rounded-md">
                     <div className="flex flex-col">
                       <span className="font-medium">{item.referencia}</span>
-                      <span className="text-xs text-muted-foreground">{item.nombre}</span>
+                      <span className="text-xs text-muted-foreground">{item.nombre_repuesto}</span>
+                      <span className="text-[10px] text-muted-foreground">
+                        Solicitado por: {item.nombre_solicitante}
+                        {item.cantidad > 1 && ` (x${item.cantidad})`}
+                      </span>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeItem(item.id)}
-                      className="text-destructive hover:text-destructive/90"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    {!isTechnician && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeItemFromCart(item.id_item_carrito)}
+                        className="text-destructive hover:text-destructive/90"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
                   </li>
                 ))}
               </ul>
             )}
           </div>
 
-          <Button onClick={handleSubmit} className="w-full mt-auto" disabled={isSubmitting}>
-            {isSubmitting ? "Enviando..." : "Enviar Solicitud"}
-          </Button>
+          {!isTechnician && (
+            <Button onClick={handleSubmit} className="w-full mt-auto" disabled={isSubmitting}>
+              {isSubmitting ? "Enviando..." : "Enviar Solicitud"}
+            </Button>
+          )}
         </CardContent>
       </Card>
 

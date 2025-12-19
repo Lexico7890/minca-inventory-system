@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import type { InventoryItem } from "../types";
 import { updateItemComplete } from "../services";
 import { useRequestsStore } from "@/features/requests/store/useRequestsStore";
+import { useUserStore } from "@/store/useUserStore";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 
@@ -28,9 +29,11 @@ interface InventoryEditSheetProps {
 type ActionType = "solicitar" | "taller" | null;
 
 export function InventoryEditSheet({ item, open, onOpenChange, onSaveSuccess }: InventoryEditSheetProps) {
-    const { addItem } = useRequestsStore();
+    const { addItemToCart } = useRequestsStore();
+    const { sessionData, hasRole } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
     const [selectedAction, setSelectedAction] = useState<ActionType>(null);
+    const isTechnician = hasRole('tecnico');
 
     // Form State (Changed to string | number to handle empty inputs gracefully)
     const [stockActual, setStockActual] = useState<string | number>(item.stock_actual);
@@ -82,6 +85,20 @@ export function InventoryEditSheet({ item, open, onOpenChange, onSaveSuccess }: 
                 // Ensure correct types for RPC
                 const fechaEstimadaISO = fechaEstimada ? new Date(fechaEstimada).toISOString() : null;
 
+                // Determine logic for "nuevo_hasta"
+                // If stock increased, we send current date. Trigger will add 5 days.
+                // If stock decreased or stayed same, we check if it was ALREADY new.
+                // If it was new, we maintain the status by sending current date (so trigger resets to 5 days from now).
+                // If it wasn't new, we send null to clear it.
+                let nuevoHasta = null;
+                const isCurrentlyNew = item.nuevo_hasta && new Date() < new Date(item.nuevo_hasta);
+
+                if (finalStockActual > item.stock_actual) {
+                    nuevoHasta = new Date().toISOString();
+                } else if (isCurrentlyNew) {
+                    nuevoHasta = new Date().toISOString();
+                }
+
                 await updateItemComplete(
                     String(item.id_inventario), // Ensure UUID string
                     finalStockActual,
@@ -89,18 +106,23 @@ export function InventoryEditSheet({ item, open, onOpenChange, onSaveSuccess }: 
                     finalCantidadMinima,
                     descontinuado,
                     tipo,
-                    fechaEstimadaISO
+                    fechaEstimadaISO,
+                    nuevoHasta
                 );
             }
 
             // Handle Actions
             if (selectedAction === "solicitar") {
-                addItem({
-                    id: item.id_repuesto,
-                    nombre: item.nombre,
-                    referencia: item.referencia,
-                });
-                toast.success(`"${item.nombre}" agregado a solicitudes`);
+                if (!sessionData?.user?.id) {
+                    toast.error("No se pudo identificar al usuario para agregar al carrito");
+                } else {
+                    await addItemToCart(
+                        sessionData.user.id,
+                        item.id_localizacion,
+                        item.id_repuesto
+                    );
+                    toast.success(`"${item.nombre}" agregado a solicitudes`);
+                }
             } else if (selectedAction === "taller") {
                 // Future implementation
                 console.log("Enviar a taller - logic pending");
@@ -185,13 +207,15 @@ export function InventoryEditSheet({ item, open, onOpenChange, onSaveSuccess }: 
                         >
                             Solicitar
                         </Button>
-                        <Button
-                            variant={selectedAction === "taller" ? "default" : "outline"}
-                            className="w-full bg-blue-300 hover:bg-blue-400"
-                            onClick={() => toggleAction("taller")}
-                        >
-                            Enviar a Taller
-                        </Button>
+                        {!isTechnician && (
+                            <Button
+                                variant={selectedAction === "taller" ? "default" : "outline"}
+                                className="w-full bg-blue-300 hover:bg-blue-400"
+                                onClick={() => toggleAction("taller")}
+                            >
+                                Enviar a Taller
+                            </Button>
+                        )}
                     </div>
 
                     {/* Editable Fields */}
@@ -204,6 +228,7 @@ export function InventoryEditSheet({ item, open, onOpenChange, onSaveSuccess }: 
                                     type="number"
                                     value={stockActual}
                                     onChange={(e) => handleNumberChange(e.target.value, setStockActual)}
+                                    disabled={isTechnician}
                                 />
                             </div>
                             <div className="space-y-2">
@@ -213,6 +238,7 @@ export function InventoryEditSheet({ item, open, onOpenChange, onSaveSuccess }: 
                                     type="number"
                                     value={cantidadMinima}
                                     onChange={(e) => handleNumberChange(e.target.value, setCantidadMinima)}
+                                    disabled={isTechnician}
                                 />
                             </div>
                         </div>
@@ -223,12 +249,13 @@ export function InventoryEditSheet({ item, open, onOpenChange, onSaveSuccess }: 
                                 id="posicion"
                                 value={posicion}
                                 onChange={(e) => setPosicion(e.target.value)}
+                                disabled={isTechnician}
                             />
                         </div>
 
                         <div className="space-y-2">
                             <Label htmlFor="tipo">Tipo</Label>
-                            <Select value={tipo} onValueChange={setTipo}>
+                            <Select value={tipo} onValueChange={setTipo} disabled={isTechnician}>
                                 <SelectTrigger id="tipo">
                                     <SelectValue placeholder="Seleccionar tipo" />
                                 </SelectTrigger>
@@ -251,6 +278,7 @@ export function InventoryEditSheet({ item, open, onOpenChange, onSaveSuccess }: 
                                 type="date"
                                 value={fechaEstimada}
                                 onChange={(e) => setFechaEstimada(e.target.value)}
+                                disabled={isTechnician}
                             />
                         </div>
 
@@ -259,6 +287,7 @@ export function InventoryEditSheet({ item, open, onOpenChange, onSaveSuccess }: 
                                 id="descontinuado"
                                 checked={descontinuado}
                                 onCheckedChange={(checked) => setDescontinuado(checked === true)}
+                                disabled={isTechnician}
                             />
                             <Label htmlFor="descontinuado" className="font-normal cursor-pointer text-red-300">
                                 Descontinuado
