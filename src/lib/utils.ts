@@ -1,4 +1,4 @@
-import type { RequestItem } from "@/features/requests/store/useRequestsStore";
+import type { CartItem } from "@/features/requests/types";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -20,7 +20,8 @@ export function cn(...inputs: ClassValue[]) {
  * @param phoneNumber Número de destino (formato internacional sin +, ej: 573001234567)
  */
 export const sendWhatsAppNotification = (
-  items: RequestItem[],
+  items: CartItem[],
+  comment: string,
   context: RequestContext,
   phoneNumber: string = "573001234567" // Número por defecto de la Bodega (Cámbialo)
 ) => {
@@ -32,14 +33,13 @@ export const sendWhatsAppNotification = (
   message += `👤 *Solicita:* ${context.solicitante}\n`;
   message += `📍 *Origen:* ${context.origen}\n`;
   message += `🏭 *Destino:* ${context.destino}\n`;
-
+  message += `📝 *Comentario:* ${comment}\n`;
   message += `--------------------------------\n`;
   message += `*LISTA DE ITEMS:*\n\n`;
 
   // 2. Iterar items para hacer la lista
   items.forEach((item, index) => {
-    message += `${index + 1}. *${item.nombre}*\n`;
-    message += `   Ref: ${item.referencia}`;
+    message += `${index + 1}. Ref: ${item.referencia} - ${item.nombre_repuesto}\n`;
   });
 
   message += `\n--------------------------------\n`;

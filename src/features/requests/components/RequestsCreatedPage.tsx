@@ -125,7 +125,8 @@ export default function RequestsCreatedPage() {
       if (selectedDestinationPhone?.telefono) {
         // Usamos la utilidad que creamos
         sendWhatsAppNotification(
-          cartItems, 
+          cartItems,
+          comment,
           {
             origen: selectedDestinationPhone.nombre,
             destino: currentLocation.nombre,
