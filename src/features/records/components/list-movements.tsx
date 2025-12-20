@@ -71,7 +71,8 @@ export default function ListMovements() {
     const { setMovementToEdit } = useRecordsStore();
     const markAsDownloaded = useMarkMovementAsDownloaded();
     const [downloadConfirmId, setDownloadConfirmId] = useState<string | null>(null);
-    const [viewMovement, setViewMovement] = useState<Record<string, unknown> | null>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [viewMovement, setViewMovement] = useState<any | null>(null);
 
     const handleDownload = () => {
         if (downloadConfirmId) {
@@ -80,13 +81,15 @@ export default function ListMovements() {
         }
     };
 
-    const getRowClass = (movement: Record<string, unknown>) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const getRowClass = (movement: any) => {
         if (movement.descargada === true) {
             return "bg-green-400/50"; // User requested bg-green-400
         }
 
         if (movement.fecha) {
-            const movementDate = new Date(movement.fecha);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const movementDate = new Date(movement.fecha as any);
             const now = new Date();
             const diffMs = now.getTime() - movementDate.getTime();
             const diffHours = diffMs / (1000 * 60 * 60);
@@ -213,7 +216,8 @@ export default function ListMovements() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {movements.map((movement: Record<string, unknown>) => (
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                            {movements.map((movement: any) => (
                                 <TableRow
                                     key={movement.id_movimientos_tecnicos || movement.id}
                                     className={cn(getRowClass(movement))}

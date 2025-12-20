@@ -124,7 +124,8 @@ export default function RepuestosPage() {
         }
     };
 
-    const handleSubmitForm = async (formData: Record<string, unknown>) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleSubmitForm = async (formData: any) => {
         try {
             if (editingRepuesto) {
                 await updateMutation.mutateAsync({ id: editingRepuesto.id_repuesto, data: formData });

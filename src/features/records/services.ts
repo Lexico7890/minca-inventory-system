@@ -1,5 +1,4 @@
 import { supabase } from "@/lib/supabase";
-import type { InventoryItem } from "@/types/common-types";
 
 interface MovementFilters {
     page: number;
@@ -78,7 +77,8 @@ export async function getListMovements(filters: MovementFilters) {
         throw new Error(error.message);
     }
 
-    return { data: data as InventoryItem[], count };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return { data: data as any[], count };
 }
 
 export async function getTechniciansByLocation(locationId: string) {

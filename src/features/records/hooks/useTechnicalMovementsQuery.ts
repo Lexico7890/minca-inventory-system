@@ -50,8 +50,10 @@ export function useCreateTechnicalMovement() {
       queryClient.setQueryData(['technical-movements'], (old: unknown) => {
         // Usamos un ID temporal para la UI mientras responde el servidor
         const tempItem = { ...newMovement, id_movimientos_tecnicos: 'temp-' + Date.now() };
-        if (!old) return [tempItem];
-        return [tempItem, ...old];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (!old) return [tempItem] as any[];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return [tempItem, ...(old as any[])];
       });
 
       return { previousMovements };

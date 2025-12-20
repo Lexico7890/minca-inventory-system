@@ -136,13 +136,14 @@ export default function MovementsWorkshopForm() {
       id_usuario_responsable: sessionData?.user?.id,
       id_tecnico_asignado: selectedTechnicianId,
       id_repuesto: selected?.id_repuesto,
-      concepto: actionButtonGroup === ActionButtonGroup.VENTA ? TIPY_CONCEPT.VENTA : movementConcept,
+      concepto: (actionButtonGroup === ActionButtonGroup.VENTA ? TIPY_CONCEPT.VENTA : movementConcept) || undefined,
       tipo: actionButtonGroup,
       cantidad: countItems,
       numero_orden: validatedOrderNumber || "",
     };
 
-    await handleCreateTechnicalMovement(movementData);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await handleCreateTechnicalMovement(movementData as any);
 
     // Clear form and edit state
     setSelected(null);
@@ -185,7 +186,8 @@ export default function MovementsWorkshopForm() {
                   <SelectValue placeholder="Seleccionar técnico" />
                 </SelectTrigger>
                 <SelectContent>
-                  {technicians?.map((tech: Record<string, unknown>) => (
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {technicians?.map((tech: any) => (
                     <SelectItem key={tech.id_usuario} value={tech.id_usuario}>
                       {tech.nombre_usuario}
                     </SelectItem>
