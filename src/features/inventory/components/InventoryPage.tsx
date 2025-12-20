@@ -71,13 +71,15 @@ export default function InventoryPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold">Inventario de Repuestos</h1>
         <div className="flex gap-2">
-          <InventoryImageUploadModal
-            trigger={
-              <Button variant="outline" size="icon">
-                <Camera className="h-4 w-4" />
-              </Button>
-            }
-          />
+          {!hasRole('tecnico') && (
+            <InventoryImageUploadModal
+              trigger={
+                <Button variant="outline" size="icon">
+                  <Camera className="h-4 w-4" />
+                </Button>
+              }
+            />
+          )}
           <Button
             variant="outline"
             size="icon"

@@ -162,7 +162,7 @@ export function InventoryImageUploadModal({
 
         <div className="flex flex-col items-center justify-center p-4 min-h-[200px]">
           {step === "initial" && (
-            <div className="flex flex-col gap-4 w-full">
+            <div className="flex flex-col gap-4 w-full max-w-xs">
               {/* Hidden Inputs */}
               <input
                 type="file"
