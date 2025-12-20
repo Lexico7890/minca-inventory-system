@@ -114,14 +114,17 @@ export async function bulkUploadRepuestos(file: File): Promise<{ success: number
           try {
             // Validate and map row data to RepuestoFormData
             // This is a basic mapping, might need adjustment based on Excel structure
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const r: any = row;
             const repuestoData: RepuestoFormData = {
-              referencia: row.referencia,
-              nombre: row.nombre,
-              cantidad_minima: row.cantidad_minima || 0,
-              descontinuado: row.descontinuado === 'TRUE' || row.descontinuado === true,
-              tipo: row.tipo || 'General',
-              fecha_estimada: row.fecha_estimada ? new Date(row.fecha_estimada).toISOString() : null,
-              url_imagen: row.url_imagen || null,
+              referencia: r.referencia || "",
+              nombre: r.nombre || "",
+              cantidad_minima: Number(r.cantidad_minima) || 0,
+              descontinuado: r.descontinuado === 'TRUE' || r.descontinuado === true,
+              tipo: r.tipo || 'General',
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              fecha_estimada: r.fecha_estimada ? new Date(r.fecha_estimada as any).toISOString() : null,
+              url_imagen: r.url_imagen || null,
             };
 
             await createRepuesto(repuestoData);

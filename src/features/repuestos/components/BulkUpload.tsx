@@ -134,7 +134,8 @@ export function BulkUpload({ onSuccess }: BulkUploadProps) {
                                     <p className="font-semibold mb-1">Errores:</p>
                                     {uploadResult.errors.map((err, idx) => (
                                         <div key={idx} className="mb-1 text-destructive">
-                                            Fila {JSON.stringify(err.row)}: {err.error?.message || "Error desconocido"}
+                                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                            Fila {JSON.stringify(err.row)}: {(err.error as any)?.message || "Error desconocido"}
                                         </div>
                                     ))}
                                 </div>

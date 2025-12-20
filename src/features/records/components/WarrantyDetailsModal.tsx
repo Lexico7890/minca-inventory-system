@@ -10,11 +10,12 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { ExternalLink, User, Wrench, MapPin, FileText, Package } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import type { Warranty } from "../types";
 
 interface WarrantyDetailsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  warranty: Record<string, unknown> | null;
+  warranty: Warranty | null;
 }
 
 export default function WarrantyDetailsModal({

@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useGarantiasDashboard } from "../queries";
+import type { Warranty } from "../types";
 import { Loader2, Search, Filter, Eye, X, User } from "lucide-react";
 import { format, isWithinInterval, startOfDay, endOfDay } from "date-fns";
 import { es } from "date-fns/locale";
@@ -35,7 +36,7 @@ export default function GuaranteesDashboard() {
   const [endDate, setEndDate] = useState("");
   
   // Modal state
-  const [selectedWarranty, setSelectedWarranty] = useState<Record<string, unknown> | null>(null);
+  const [selectedWarranty, setSelectedWarranty] = useState<Warranty | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filteredWarranties = useMemo(() => {

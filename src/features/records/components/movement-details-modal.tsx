@@ -11,12 +11,14 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
 interface MovementDetailsModalProps {
-  movement: Record<string, unknown> | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  movement: any | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-const DetailItem = ({ icon: Icon, label, value, className }: { icon: React.ComponentType<{ className?: string }>, label: string, value: unknown, className?: string }) => (
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const DetailItem = ({ icon: Icon, label, value, className }: { icon: React.ComponentType<{ className?: string }>, label: string, value: any, className?: string }) => (
   <div className={cn("flex flex-col space-y-1 p-2 rounded-md border bg-muted/20", className)}>
     <div className="flex items-center text-xs text-muted-foreground gap-1.5">
       <Icon className="h-3.5 w-3.5" />
