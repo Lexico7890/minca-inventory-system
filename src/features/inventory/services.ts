@@ -166,12 +166,17 @@ export async function searchRepuestos(query: string, id_localizacion: string): P
     return [];
   }
 
-  const fromDate = id_localizacion ? 'v_inventario_completo' : 'repuestos';
+  const tableName = id_localizacion ? 'v_inventario_completo' : 'repuestos';
 
-  const { data, error } = await supabase
-    .from(fromDate)
-    .select('*')
-    .eq('id_localizacion', id_localizacion)
+  let queryBuilder = supabase
+    .from(tableName)
+    .select('*');
+
+  if (id_localizacion) {
+    queryBuilder = queryBuilder.eq('id_localizacion', id_localizacion);
+  }
+
+  const { data, error } = await queryBuilder
     .or(`nombre.ilike.%${query}%,referencia.ilike.%${query}%`)
     .limit(50);
 
