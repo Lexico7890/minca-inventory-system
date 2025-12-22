@@ -47,6 +47,19 @@ export function InventoryImageUploadModal({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
+  const fileToBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const result = reader.result as string;
+        // Remove the data URI prefix (e.g., "data:image/png;base64,")
+        const base64 = result.split(",")[1];
+        resolve(base64);
+      };
+      reader.onerror = (error) => reject(error);
+    });
+
   useEffect(() => {
     if (!isOpen) {
       // Reset state when modal closes
@@ -116,29 +129,34 @@ export function InventoryImageUploadModal({
 
     setStep("loading");
 
-    const { data, error } = await supabase.functions.invoke(
-      "escanear-repuestos",
-      {
-        body: file,
-        headers: {
-          "Content-Type": file.type,
-        },
+    try {
+      const imageBase64 = await fileToBase64(file);
+
+      const { data, error } = await supabase.functions.invoke(
+        "escanear-repuestos",
+        {
+          body: { imageBase64 },
+        }
+      );
+
+      if (error) {
+        console.error("Error invoking function:", error);
+        toast.error("Error al procesar la imagen. Por favor, intenta de nuevo.");
+        setStep("error");
+        return;
       }
-    );
 
-    if (error) {
-      console.error("Error invoking function:", error);
-      toast.error("Error al procesar la imagen. Por favor, intenta de nuevo.");
-      setStep("error");
-      return;
-    }
-
-    if (Array.isArray(data)) {
-      setItems(data);
-      setStep("results");
-    } else {
-      console.error("Invalid data format from function:", data);
-      toast.error("La respuesta del servidor no es válida.");
+      if (Array.isArray(data)) {
+        setItems(data);
+        setStep("results");
+      } else {
+        console.error("Invalid data format from function:", data);
+        toast.error("La respuesta del servidor no es válida.");
+        setStep("error");
+      }
+    } catch (base64Error) {
+      console.error("Error converting file to Base64:", base64Error);
+      toast.error("No se pudo leer el archivo de imagen.");
       setStep("error");
     }
   };
