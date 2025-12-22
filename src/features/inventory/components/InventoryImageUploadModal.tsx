@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Camera, Upload, Loader2, Save } from "lucide-react";
+import { Camera, Upload, Loader2, Save, RefreshCcw } from "lucide-react";
 import { toast } from "sonner";
 import {
   Table,
@@ -21,11 +21,11 @@ import {
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
-interface InventoryItemMock {
-  id: number;
-  name: string;
-  quantity: number;
+interface InventoryItem {
+  nombre: string;
+  cantidad: number;
 }
 
 export function InventoryImageUploadModal({
@@ -34,13 +34,14 @@ export function InventoryImageUploadModal({
   trigger: React.ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [step, setStep] = useState<"initial" | "loading" | "results">(
+  const [step, setStep] = useState<"initial" | "loading" | "results" | "error">(
     "initial"
   );
-  const [items, setItems] = useState<InventoryItemMock[]>([]);
-  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [items, setItems] = useState<InventoryItem[]>([]);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isDragging, setIsDragging] = useState(false);
   const [isDragError, setIsDragError] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const isMobile = useIsMobile();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -57,9 +58,18 @@ export function InventoryImageUploadModal({
     }
   }, [isOpen]);
 
+  const processFile = (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      toast.error("Por favor sube un archivo de imagen válido.");
+      return;
+    }
+    setSelectedFile(file);
+    startLoadingProcess(file);
+  };
+
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      startLoadingProcess();
+      processFile(e.target.files[0]);
     }
   };
 
@@ -96,42 +106,49 @@ export function InventoryImageUploadModal({
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
-
-      if (!file.type.startsWith('image/')) {
-        toast.error("Por favor sube un archivo de imagen válido.");
-        return;
-      }
-
-      // Manually set the file input files
-      if (fileInputRef.current) {
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file);
-        fileInputRef.current.files = dataTransfer.files;
-        startLoadingProcess();
-      }
+      processFile(file);
     }
   };
 
-  const startLoadingProcess = () => {
+  const startLoadingProcess = async (fileToProcess?: File) => {
+    const file = fileToProcess || selectedFile;
+    if (!file) return;
+
     setStep("loading");
-    setTimeout(() => {
-      // Generate dummy data
-      const dummyItems = Array.from({ length: 20 }, (_, i) => ({
-        id: i + 1,
-        name: `Repuesto Detectado ${i + 1}`,
-        quantity: Math.floor(Math.random() * 50) + 1,
-      }));
-      setItems(dummyItems);
+
+    const { data, error } = await supabase.functions.invoke(
+      "escanear-repuestos",
+      {
+        body: file,
+        headers: {
+          "Content-Type": file.type,
+        },
+      }
+    );
+
+    if (error) {
+      console.error("Error invoking function:", error);
+      toast.error("Error al procesar la imagen. Por favor, intenta de nuevo.");
+      setStep("error");
+      return;
+    }
+
+    if (Array.isArray(data)) {
+      setItems(data);
       setStep("results");
-    }, 5000);
+    } else {
+      console.error("Invalid data format from function:", data);
+      toast.error("La respuesta del servidor no es válida.");
+      setStep("error");
+    }
   };
 
-  const toggleSelection = (id: number) => {
+  const toggleSelection = (itemName: string) => {
     const newSelected = new Set(selectedIds);
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
+    if (newSelected.has(itemName)) {
+      newSelected.delete(itemName);
     } else {
-      newSelected.add(id);
+      newSelected.add(itemName);
     }
     setSelectedIds(newSelected);
   };
@@ -157,6 +174,8 @@ export function InventoryImageUploadModal({
             {step === "loading" && "Procesando imagen..."}
             {step === "results" &&
               "Verifica los items detectados y selecciona los que deseas guardar."}
+            {step === "error" &&
+              "Ocurrió un error al procesar la imagen. Puedes intentarlo de nuevo."}
           </DialogDescription>
         </DialogHeader>
 
@@ -251,6 +270,27 @@ export function InventoryImageUploadModal({
             </div>
           )}
 
+          {step === "error" && selectedFile && (
+            <div className="flex flex-col items-center gap-4 w-full">
+              <img
+                src={URL.createObjectURL(selectedFile)}
+                alt="Vista previa de la imagen seleccionada"
+                className="max-h-48 rounded-md border"
+              />
+              <p className="text-destructive text-center">
+                No se pudo procesar la imagen.
+              </p>
+              <Button
+                onClick={() => startLoadingProcess()}
+                variant="secondary"
+                className="w-full sm:w-auto"
+              >
+                <RefreshCcw className="mr-2 h-4 w-4" />
+                Reintentar
+              </Button>
+            </div>
+          )}
+
           {step === "results" && (
             <div className="w-full space-y-4">
               <div className="border rounded-md">
@@ -263,29 +303,29 @@ export function InventoryImageUploadModal({
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {items.map((item) => {
-                      const isSelected = selectedIds.has(item.id);
+                    {items.map((item, index) => {
+                      const isSelected = selectedIds.has(item.nombre);
                       return (
                         <TableRow
-                          key={item.id}
+                          key={`${item.nombre}-${index}`}
                           className={
                             isSelected
                               ? "bg-green-100 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-900/50"
                               : ""
                           }
-                          onClick={() => toggleSelection(item.id)}
+                          onClick={() => toggleSelection(item.nombre)}
                         >
                           <TableCell>
                             <Checkbox
                               checked={isSelected}
-                              onCheckedChange={() => toggleSelection(item.id)}
+                              onCheckedChange={() => toggleSelection(item.nombre)}
                             />
                           </TableCell>
                           <TableCell className="font-medium">
-                            {item.name}
+                            {item.nombre}
                           </TableCell>
                           <TableCell className="text-right">
-                            {item.quantity}
+                            {item.cantidad}
                           </TableCell>
                         </TableRow>
                       );
