@@ -187,3 +187,4 @@ export async function searchRepuestos(query: string, id_localizacion: string): P
 
   return (data as InventoryItem[]) || [];
 }
+

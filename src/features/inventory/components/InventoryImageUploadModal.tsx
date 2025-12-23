@@ -47,19 +47,6 @@ export function InventoryImageUploadModal({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
-  const fileToBase64 = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        const result = reader.result as string;
-        // Remove the data URI prefix (e.g., "data:image/png;base64,")
-        const base64 = result.split(",")[1];
-        resolve(base64);
-      };
-      reader.onerror = (error) => reject(error);
-    });
-
   useEffect(() => {
     if (!isOpen) {
       // Reset state when modal closes
@@ -128,35 +115,61 @@ export function InventoryImageUploadModal({
     if (!file) return;
 
     setStep("loading");
+    const bucketName = 'repuestos'; // Asegúrate de que este bucket exista en Supabase
 
     try {
-      const imageBase64 = await fileToBase64(file);
+      // ---------------------------------------------------------
+      // PASO 1: Subir imagen al Storage de Supabase
+      // ---------------------------------------------------------
+      console.log("Subiendo imagen al Storage...");
+      
+      // Creamos un nombre único
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const filePath = `temp/${fileName}`; // Carpeta temp/
 
-      const { data, error } = await supabase.functions.invoke(
-        "escanear-repuestos",
-        {
-          body: { imageBase64 },
-        }
-      );
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from(bucketName)
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw new Error(`Error subiendo imagen: ${uploadError.message}`);
+      }
+
+      console.log("Imagen subida. Ruta:", uploadData.path);
+
+      // ---------------------------------------------------------
+      // PASO 2: Invocar la Edge Function con la RUTA
+      // ---------------------------------------------------------
+      console.log("Invocando Edge Function...");
+      
+      const { data, error } = await supabase.functions.invoke("escanear-repuestos", {
+        body: { 
+          imagePath: uploadData.path, 
+          bucketName: bucketName 
+        },
+      });
 
       if (error) {
-        console.error("Error invoking function:", error);
-        toast.error("Error al procesar la imagen. Por favor, intenta de nuevo.");
-        setStep("error");
-        return;
+         // Intentar leer el mensaje de error JSON si existe
+         let msg = error.message;
+         try { msg = JSON.parse(error.message).error || msg } catch(e){}
+         throw new Error(msg);
       }
 
-      if (Array.isArray(data)) {
-        setItems(data);
+      // ---------------------------------------------------------
+      // PASO 3: Procesar respuesta
+      // ---------------------------------------------------------
+      if (data && Array.isArray(data.repuestos)) {
+        setItems(data.repuestos);
         setStep("results");
       } else {
-        console.error("Invalid data format from function:", data);
-        toast.error("La respuesta del servidor no es válida.");
-        setStep("error");
+        throw new Error("Formato de respuesta inválido");
       }
-    } catch (base64Error) {
-      console.error("Error converting file to Base64:", base64Error);
-      toast.error("No se pudo leer el archivo de imagen.");
+
+    } catch (err: any) {
+      console.error("Error en el proceso:", err);
+      toast.error(err.message || "Ocurrió un error inesperado");
       setStep("error");
     }
   };
