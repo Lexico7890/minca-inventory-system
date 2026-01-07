@@ -4,11 +4,11 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
+} from "@/shared/ui/table";
 import type { InventoryItem } from "../types";
 import { InventoryTableRow } from "./InventoryTableRow";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/button";
 
 interface InventoryTableProps {
     items: InventoryItem[];

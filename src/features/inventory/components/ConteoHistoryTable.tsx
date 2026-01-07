@@ -5,10 +5,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/shared/ui/table";
 import { useQuery } from '@tanstack/react-query';
 import { getCountHistory } from '../services';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/shared/ui/skeleton';
 import { AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 

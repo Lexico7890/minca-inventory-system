@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/shared/api/supabase';
 import type { Destination, CartItem } from '../types';
 
 export async function getLocations(): Promise<Destination[]> {

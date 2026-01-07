@@ -2,8 +2,8 @@ import ListMovements from "./list-movements";
 import MovementsWorkshopForm from "./movements-workshop-form";
 import GuaranteesForm from "./GuaranteesForm";
 import GuaranteesDashboard from "./GuaranteesDashboard";
-import { useUserStore } from "@/store/useUserStore";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useUserStore } from "@/entities/user/model/useUserStore";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 
 export default function RecordsPage() {
   const { checkMenuPermission } = useUserStore();

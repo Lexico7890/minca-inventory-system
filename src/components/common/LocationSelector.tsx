@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useUserStore } from '@/store/useUserStore';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { supabase } from '@/shared/api/supabase';
+import { useUserStore } from '@/entities/user/model/useUserStore';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/shared/ui/card';
+import { Button } from '@/shared/ui/button';
 import { MapPin } from 'lucide-react';
 import type { UserLocation } from '@/types/common-types';
 

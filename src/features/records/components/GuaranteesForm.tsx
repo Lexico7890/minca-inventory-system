@@ -1,14 +1,14 @@
 import { useState, type FormEvent } from "react";
-import { useUserStore } from "@/store/useUserStore";
+import { useUserStore } from "@/entities/user/model/useUserStore";
 import { useTechnicians, useCreateWarranty } from "../queries";
 import { uploadWarrantyImage } from "../services";
 import AutocompleteInput from "@/components/AutocompleteInput";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/shared/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Textarea } from "@/shared/ui/textarea";
 import { toast } from "sonner";
 
 export default function GuaranteesForm() {

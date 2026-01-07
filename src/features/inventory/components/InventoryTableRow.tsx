@@ -1,12 +1,12 @@
-import { Badge } from "@/components/ui/badge";
-import { TableCell, TableRow } from "@/components/ui/table";
+import { Badge } from "@/shared/ui/badge";
+import { TableCell, TableRow } from "@/shared/ui/table";
 import type { InventoryItem } from "../types";
 import { InventoryEditSheet } from "./InventoryEditSheet";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/button";
 import { Pencil } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { toast } from "sonner";
 
 interface InventoryTableRowProps {

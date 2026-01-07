@@ -5,19 +5,19 @@ import {
     SheetFooter,
     SheetHeader,
     SheetTitle,
-} from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@/shared/ui/sheet";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Checkbox } from "@/shared/ui/checkbox";
 import { useState, useEffect } from "react";
 import type { InventoryItem } from "../types";
 import { updateItemComplete } from "../services";
 import { useRequestsStore } from "@/features/requests/store/useRequestsStore";
-import { useUserStore } from "@/store/useUserStore";
+import { useUserStore } from "@/entities/user/model/useUserStore";
 import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/ui/badge";
 
 interface InventoryEditSheetProps {
     item: InventoryItem;

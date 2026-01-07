@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/shared/api/supabase';
 import { toast } from 'sonner';
 import type { TechnicalMovement } from '@/types/technical-movement';
 
@@ -31,16 +31,16 @@ export function useCreateTechnicalMovement() {
       // 4. Manejo de errores de Negocio (Ej: "Stock insuficiente")
       // La función RPC devuelve { success: false, message: "..." } si algo falla lógicamente.
       if (!data.success) {
-        throw new Error(data.message); 
+        throw new Error(data.message);
       }
 
       // 5. Retornamos el objeto completo con el ID real generado por la BD
-      return { 
-        ...newMovement, 
-        id_movimientos_tecnicos: data.id_movimiento 
+      return {
+        ...newMovement,
+        id_movimientos_tecnicos: data.id_movimiento
       };
     },
-    
+
     // ... El resto de tu código (onMutate, onError, onSettled) se mantiene igual ...
     // Solo asegúrate de que el Optimistic Update maneje bien la estructura
     onMutate: async (newMovement) => {
@@ -66,13 +66,13 @@ export function useCreateTechnicalMovement() {
       console.error('Error creating movement:', error);
       toast.error('Error al registrar el movimiento técnico');
     },
-    
+
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['technical-movements'] });
       // También es buena idea refrescar el inventario ya que cambió el saldo
       queryClient.invalidateQueries({ queryKey: ['inventory'] });
     },
-    
+
     onSuccess: () => {
       toast.success('Movimiento técnico registrado exitosamente');
     },

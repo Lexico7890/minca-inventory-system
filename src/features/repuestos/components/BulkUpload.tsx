@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
 import { AlertCircle, CheckCircle2, FileSpreadsheet } from "lucide-react";
 import { bulkUploadRepuestos } from "../services";
 import { toast } from "sonner";
@@ -11,8 +11,8 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+} from "@/shared/ui/dialog";
+import { Alert, AlertDescription, AlertTitle } from "@/shared/ui/alert";
 
 interface BulkUploadProps {
     onSuccess: () => void;

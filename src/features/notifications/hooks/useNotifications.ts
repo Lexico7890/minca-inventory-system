@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useUserStore } from '@/store/useUserStore';
+import { supabase } from '@/shared/api/supabase';
+import { useUserStore } from '@/entities/user/model/useUserStore';
 import type { Notification } from '../types';
 import { toast } from 'sonner';
 

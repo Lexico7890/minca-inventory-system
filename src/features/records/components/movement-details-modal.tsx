@@ -4,11 +4,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from "@/shared/ui/dialog";
+import { Button } from "@/shared/ui/button";
 import { Calendar, User, UserCog, Package, MapPin, Hash, CheckCircle2, XCircle, FileText, Image as ImageIcon } from "lucide-react";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 interface MovementDetailsModalProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

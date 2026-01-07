@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useUserStore } from '@/store/useUserStore';
+import { supabase } from '@/shared/api/supabase';
+import { useUserStore } from '@/entities/user/model/useUserStore';
 import { toast as sonnerToast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { handleSupabaseError } from '@/lib/error-handler';
+import { handleSupabaseError } from '@/shared/lib/error-handler';
 import { fetchUserSessionData } from '../utils/auth-utils';
 
 export const useLogin = () => {
@@ -28,7 +28,7 @@ export const useLogin = () => {
       if (data.session && data.user) {
         const sessionData = await fetchUserSessionData(data.user);
         setSessionData(sessionData);
-        
+
         sonnerToast.success('Bienvenido de nuevo');
       }
     } catch (error) {
@@ -46,7 +46,7 @@ export const useLogin = () => {
         handleSupabaseError(error);
         return;
       }
-      
+
       clearUser();
       sonnerToast.success('Sesión cerrada exitosamente');
       navigate('/login');

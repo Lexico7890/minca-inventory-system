@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/button";
 import {
     Form,
     FormControl,
@@ -7,16 +7,16 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input";
+import { Checkbox } from "@/shared/ui/checkbox";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from "@/shared/ui/select";
 import type { Repuesto, RepuestoFormData } from "../types";
 import { useEffect } from "react";
 

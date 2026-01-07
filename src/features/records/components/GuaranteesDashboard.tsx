@@ -5,26 +5,26 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/shared/ui/table";
 import { useGarantiasDashboard } from "../queries";
 import type { Warranty } from "../types";
 import { Loader2, Search, Filter, Eye, X, User } from "lucide-react";
 import { format, isWithinInterval, startOfDay, endOfDay } from "date-fns";
 import { es } from "date-fns/locale";
 import { useState, useMemo } from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/shared/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+} from "@/shared/ui/select";
+import { Button } from "@/shared/ui/button";
+import { Badge } from "@/shared/ui/badge";
 import WarrantyDetailsModal from "./WarrantyDetailsModal";
-import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/shared/ui/card";
+import { Label } from "@/shared/ui/label";
 
 export default function GuaranteesDashboard() {
   const { data: warranties, isLoading, isError, error } = useGarantiasDashboard();

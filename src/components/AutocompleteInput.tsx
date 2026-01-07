@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/shared/ui/input";
 import { useSearchRepuestos } from "../hooks/use-inventory";
 import type { InventoryItem } from "@/features/inventory/types";
-import { Badge } from "./ui/badge";
+import { Badge } from "../shared/ui/badge";
 
 interface AutocompleteInputProps {
   selected?: { id_repuesto: string, referencia: string, nombre: string } | null;

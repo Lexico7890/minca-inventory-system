@@ -1,12 +1,12 @@
-import { Input } from "@/components/ui/input";
+import { Input } from "@/shared/ui/input";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+} from "@/shared/ui/select";
+import { Button } from "@/shared/ui/button";
 import { Search, X } from "lucide-react";
 
 interface RepuestosFiltersProps {
