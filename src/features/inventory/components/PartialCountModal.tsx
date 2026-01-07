@@ -5,13 +5,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+} from '@/shared/ui/dialog';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
 import { useQuery } from '@tanstack/react-query';
 import { generatePartialCountItems } from '../services';
-import { useUserStore } from '@/store/useUserStore';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useUserStore } from '@/entities/user/model/useUserStore';
+import { Skeleton } from '@/shared/ui/skeleton';
 import { AlertCircle } from 'lucide-react';
 
 interface PartialCountModalProps {

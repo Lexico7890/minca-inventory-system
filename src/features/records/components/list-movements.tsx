@@ -6,12 +6,12 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
+} from "@/shared/ui/table"
 import { useSearchMovements, useMarkMovementAsDownloaded } from "../queries";
 import { Loader2, Edit, Eye, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { ActionMenu } from "@/components/common/ActionMenu";
 import { useRecordsStore } from "../store/useRecordsStore";
-import { useUserStore } from "@/store/useUserStore";
+import { useUserStore } from "@/entities/user/model/useUserStore";
 import { useState } from "react";
 import {
     AlertDialog,
@@ -22,18 +22,18 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from "@/shared/ui/alert-dialog";
+import { cn } from "@/shared/lib/utils";
+import { Input } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+} from "@/shared/ui/select";
+import { Label } from "@/shared/ui/label";
 import { MovementDetailsModal } from "./movement-details-modal";
 
 export default function ListMovements() {

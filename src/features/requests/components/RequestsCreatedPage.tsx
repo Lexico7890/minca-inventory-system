@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { useRequestsStore } from "../store/useRequestsStore";
 import { getLocations, createRequest, getRequestHistory, type RequestHistoryItem } from "../services/requestsService";
-import { useUserStore } from "@/store/useUserStore";
-import { Button } from "@/components/ui/button";
+import { useUserStore } from "@/entities/user/model/useUserStore";
+import { Button } from "@/shared/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+} from "@/shared/ui/select";
+import { Textarea } from "@/shared/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Trash2 } from "lucide-react";
 import {
   Table,
@@ -20,9 +20,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/shared/ui/table";
 import { toast } from "sonner";
-import { sendWhatsAppNotification } from "@/lib/utils";
+import { sendWhatsAppNotification } from "@/shared/lib/utils";
 
 export default function RequestsCreatedPage() {
   const {

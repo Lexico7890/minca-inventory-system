@@ -6,14 +6,14 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogDescription,
-} from "@/components/ui/dialog";
+} from "@/shared/ui/dialog";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
+} from "@/shared/ui/popover";
+import { Button } from "@/shared/ui/button";
+import { useIsMobile } from "@/shared/lib/use-mobile";
 import {
   Camera,
   Upload,
@@ -30,17 +30,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/shared/ui/table";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
-import { supabase } from "@/lib/supabase";
-import { useUserStore } from "@/store/useUserStore";
+} from "@/shared/ui/tooltip";
+import { Checkbox } from "@/shared/ui/checkbox";
+import { cn } from "@/shared/lib/utils";
+import { supabase } from "@/shared/api/supabase";
+import { useUserStore } from "@/entities/user/model/useUserStore";
 
 interface ScannedItem {
   id_repuesto: string;

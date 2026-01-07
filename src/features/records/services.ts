@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/shared/api/supabase";
 
 const id_localizacion = localStorage.getItem('minca_location_id');
 

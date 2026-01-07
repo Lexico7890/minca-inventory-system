@@ -22,8 +22,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { useUserStore } from "@/store/useUserStore"
+} from "@/shared/ui/sidebar"
+import { useUserStore } from "@/entities/user/model/useUserStore"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const sessionData = useUserStore((state) => state.sessionData);

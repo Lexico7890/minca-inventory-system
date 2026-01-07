@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/shared/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { Ellipsis } from "lucide-react";
 import type { ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 export interface ActionItem {
     label: string;

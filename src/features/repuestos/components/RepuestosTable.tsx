@@ -5,17 +5,17 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
+} from "@/shared/ui/table";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+} from "@/shared/ui/dropdown-menu";
+import { Button } from "@/shared/ui/button";
 import { MoreHorizontal, ArrowUpDown, Edit, Trash2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/ui/badge";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { toast } from "sonner";

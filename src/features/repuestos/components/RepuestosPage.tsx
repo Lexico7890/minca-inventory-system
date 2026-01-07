@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Button } from "@/shared/ui/button";
 import { Plus, RefreshCw } from "lucide-react";
 import { RepuestosTable } from "./RepuestosTable";
 import { RepuestosFilters } from "./RepuestosFilters";
@@ -14,7 +14,7 @@ import {
     SheetDescription,
     SheetHeader,
     SheetTitle,
-} from "@/components/ui/sheet";
+} from "@/shared/ui/sheet";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -24,7 +24,7 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/shared/ui/alert-dialog";
 import type { Repuesto, RepuestosParams } from "../types";
 
 export default function RepuestosPage() {

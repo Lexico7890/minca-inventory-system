@@ -1,19 +1,19 @@
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/shared/lib/utils"
+import { Button } from "@/shared/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/shared/ui/card"
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+} from "@/shared/ui/field"
+import { Input } from "@/shared/ui/input"
 import { useLogin } from "@/features/login/hooks/useLogin"
 import { useState } from "react"
 

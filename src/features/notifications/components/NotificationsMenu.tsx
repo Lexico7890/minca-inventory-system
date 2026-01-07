@@ -1,14 +1,14 @@
 import { Bell } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
+} from '@/shared/ui/popover';
 import { useNotifications } from '../hooks/useNotifications';
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/lib/utils';
 
 export const NotificationsMenu = () => {
   const { notifications, unreadCount, markAsRead } = useNotifications();

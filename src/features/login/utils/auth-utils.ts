@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/shared/api/supabase';
 import type { User } from '@supabase/supabase-js';
 
 export const fetchUserSessionData = async (supabaseUser: User) => {

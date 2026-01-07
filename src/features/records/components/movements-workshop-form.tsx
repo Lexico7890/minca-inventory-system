@@ -1,6 +1,6 @@
 import AutocompleteInput from "@/components/AutocompleteInput";
-import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
+import { Button } from "@/shared/ui/button";
+import { ButtonGroup } from "@/shared/ui/button-group";
 import {
   Card,
   CardAction,
@@ -9,19 +9,19 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/shared/ui/card";
 import { BrushCleaning } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
+import { Slider } from "@/shared/ui/slider";
 import { useTechnicalMovements } from "../hooks/useTechnicalMovements";
 import { useState, useEffect } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
-import { TIPY_CONCEPT } from "@/types/movement";
-import { useUserStore } from "@/store/useUserStore";
+import { TIPY_CONCEPT } from "@/entities/movimientos/model/types";
+import { useUserStore } from "@/entities/user/model/useUserStore";
 import { useTechnicians } from "../queries";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { useRecordsStore } from "../store/useRecordsStore";
 
 enum ActionButtonGroup {

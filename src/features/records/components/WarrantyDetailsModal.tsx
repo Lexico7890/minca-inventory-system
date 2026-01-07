@@ -4,12 +4,12 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
+} from "@/shared/ui/dialog";
+import { Badge } from "@/shared/ui/badge";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { ExternalLink, User, Wrench, MapPin, FileText, Package } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/shared/ui/separator";
 import type { Warranty } from "../types";
 
 interface WarrantyDetailsModalProps {

@@ -7,9 +7,9 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "./components/ui/sidebar";
+} from "./shared/ui/sidebar";
 import { AppSidebar } from "./components/app-sidebar";
-import { Separator } from "./components/ui/separator";
+import { Separator } from "./shared/ui/separator";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,18 +17,18 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "./components/ui/breadcrumb";
-import InventoryPage from "./features/inventory/components/InventoryPage";
+} from "./shared/ui/breadcrumb";
+import InventoryPage from "./pages/inventario/ui/InventoryPage";
 import RepuestosPage from "./features/repuestos/components/RepuestosPage";
 import RecordsPage from "./features/records/components/records-page";
 import RequestsPage from "./features/requests/components/RequestsPage";
 import RequestsCreatedPage from "./features/requests/components/RequestsCreatedPage";
 import RequestsSentPage from "./features/requests/components/RequestsSentPage";
-import { Toaster } from "./components/ui/sonner";
+import { Toaster } from "./shared/ui/sonner";
 import ConteoPage from "./features/inventory/components/ConteoPage";
-import { useUserStore } from "@/store/useUserStore";
+import { useUserStore } from "@/entities/user/model/useUserStore";
 import { LoginPage } from "./features/login/components/login-page";
-import { useSupabaseAuthListener } from "./hooks/useSupabaseAuthListener";
+import { useSupabaseAuthListener } from "./shared/lib/useSupabaseAuthListener";
 import { UpdatePasswordPage } from "./features/login/components/update-password-page";
 
 import { LocationSelector } from "./components/common/LocationSelector";
@@ -49,9 +49,7 @@ const ROUTE_NAMES: Record<string, string> = {
 function App() {
   useSupabaseAuthListener();
   const location = useLocation();
-  const { sessionData, isAuthenticated } = useUserStore();
-  console.log("sessionData", sessionData);
-  console.log("isAuthenticated", isAuthenticated);
+  const { isAuthenticated } = useUserStore();
 
   // Generate breadcrumbs based on current location
   const pathSegments = location.pathname.split("/").filter(Boolean);

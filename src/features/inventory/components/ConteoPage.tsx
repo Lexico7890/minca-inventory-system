@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { FileUpload } from './FileUpload';
 import { ConteoHistoryTable } from './ConteoHistoryTable';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { read, utils } from 'xlsx';
 import { sendCountData } from '../services';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
