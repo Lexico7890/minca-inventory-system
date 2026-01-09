@@ -1,7 +1,7 @@
 // store/useUserStore.ts
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { UserLocation } from '@/types/common-types';
+import type { UserLocation } from './types';
 
 // Definición de permisos basada en la estructura proporcionada
 export interface MenuPermissions {
@@ -84,7 +84,7 @@ interface UserStore {
   sessionData: SessionData | null;
   currentLocation: UserLocation | null;
   isAuthenticated: boolean;
-  
+
   setSessionData: (data: SessionData | null) => void;
   setCurrentLocation: (location: UserLocation | null) => void;
   clearUser: () => void;
@@ -102,27 +102,27 @@ export const useUserStore = create<UserStore>()(
       sessionData: null,
       currentLocation: null,
       isAuthenticated: false,
-      
+
       setSessionData: (data) => {
-        set({ 
-          sessionData: data, 
-          isAuthenticated: !!data 
+        set({
+          sessionData: data,
+          isAuthenticated: !!data
         });
       },
-      
+
       setCurrentLocation: (location) => set({ currentLocation: location }),
-      
-      clearUser: () => set({ 
-        sessionData: null, 
+
+      clearUser: () => set({
+        sessionData: null,
         currentLocation: null,
-        isAuthenticated: false 
+        isAuthenticated: false
       }),
-      
+
       hasPermission: () => {
         // Implementación placeholder anterior, debe ser refinada si se usa
         return true;
       },
-      
+
       hasRole: (roleName: string) => {
         const state = get();
         const userRole = state.sessionData?.user.role?.nombre;

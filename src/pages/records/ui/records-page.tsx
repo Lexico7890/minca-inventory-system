@@ -7,7 +7,7 @@ import ListMovements from "./list-movements";
 import { GuaranteesForm } from "@/features/guarantees-create";
 import { GuaranteesDashboard } from "@/entities/guarantees";
 
-export default function RecordsPage() {
+export function RecordsPage() {
   const { checkMenuPermission } = useUserStore();
   const showForm = checkMenuPermission("registros", "show_form_register");
 

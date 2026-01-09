@@ -28,8 +28,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/shared/ui/sidebar"
-import { useLogin } from "@/features/login/hooks/useLogin"
-import { useUserStore } from "@/entities/user/model/useUserStore"
+import { useLogin } from "@/features/auth-login"
+import { useUserStore } from "@/entities/user"
 
 export function NavUser({
   user
@@ -44,7 +44,6 @@ export function NavUser({
   const { logout } = useLogin()
   const { currentLocation, setCurrentLocation } = useUserStore()
   const navigate = useNavigate()
-  console.log(currentLocation)
 
   return (
     <SidebarMenu>

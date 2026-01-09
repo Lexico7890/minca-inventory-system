@@ -1,5 +1,5 @@
+import { useUserStore } from '@/entities/user';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useUserStore } from '@/entities/user/model/useUserStore';
 
 interface ProtectedRouteProps {
   routeKey: string;

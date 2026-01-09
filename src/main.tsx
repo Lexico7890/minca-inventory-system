@@ -1,13 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import './index.css'
-import App from './App.tsx'
-import { queryClient } from './shared/lib/queryClient.ts'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { GlobalErrorBoundary } from './components/GlobalErrorBoundary'
-import { initSentry } from './shared/api/sentry.ts'
+import { GlobalErrorBoundary, initSentry } from './app'
+import { queryClient } from './shared/lib'
+import App from './app/ui/App'
 
 // Initialize Sentry before rendering
 initSentry()

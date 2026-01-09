@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
-import { supabase } from '@/shared/api/supabase';
-import { useUserStore } from '@/entities/user/model/useUserStore';
-import { fetchUserSessionData } from '@/features/login/utils/auth-utils';
 import { toast } from 'sonner';
+import { useUserStore } from '../model/useUserStore';
+import { fetchUserSessionData, supabase } from '@/shared/api';
 
 export const useSupabaseAuthListener = () => {
   const setSessionData = useUserStore((state) => state.setSessionData);

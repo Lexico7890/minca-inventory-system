@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { toast as sonnerToast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '@/entities/user';
-import { supabase } from '@/shared/api';
+import { fetchUserSessionData, supabase } from '@/shared/api';
 import { handleSupabaseError } from '@/shared/lib';
-import { fetchUserSessionData } from '../../../pages/auth/api';
 
 export const useLogin = () => {
     const [isLoading, setIsLoading] = useState(false);

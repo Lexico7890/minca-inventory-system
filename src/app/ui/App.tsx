@@ -1,50 +1,25 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import Inventory from "./pages/Inventory";
-import NotFound from "./pages/NotFound";
-import "./App.css";
-import { ThemeProvider } from "./components/theme-provider";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "./shared/ui/sidebar";
-import { AppSidebar } from "./components/app-sidebar";
-import { Separator } from "./shared/ui/separator";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "./shared/ui/breadcrumb";
-import InventoryPage from "./pages/inventario/ui/InventoryPage";
-import RecordsPage from "./pages/records/ui/records-page";
-import RequestsPage from "./pages/requests/ui/RequestsPage";
-import RequestsCreatedPage from "./features/spares-request-workshop/ui/RequestsCreatedPage";
-import RequestsSentPage from "./features/requests-sended/ui/RequestsSentPage";
-import { Toaster } from "./shared/ui/sonner";
-import ConteoPage from "./pages/count/ui/ConteoPage";
-import { useUserStore } from "@/entities/user/model/useUserStore";
-import { LoginPage } from "./pages/auth/ui/login-page";
-import { useSupabaseAuthListener } from "./shared/lib/useSupabaseAuthListener";
-import { UpdatePasswordPage } from "./pages/auth/ui/update-password-page";
-
-import { LocationSelector } from "./entities/locations/ui/LocationSelector";
-import { ProtectedRoute } from "./components/ProtectedRoute";
-import { NotificationsMenu } from "./widgets/notifications/ui/NotificationsMenu";
-import { RepuestosPage } from "./pages/spares";
-
-const ROUTE_NAMES: Record<string, string> = {
-  "/": "Inventario",
-  "/repuestos": "Repuestos",
-  "/registros": "Registros",
-  "/solicitudes": "Solicitudes",
-  "/solicitudes/creadas": "Solicitudes Creadas",
-  "/solicitudes/enviadas": "Solicitudes Enviadas",
-  "/inventario": "Inventario (Legacy)",
-  "/inventario/conteo": "Conteo de Inventario",
-};
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/shared/ui/breadcrumb";
+import { ThemeProvider, useSupabaseAuthListener } from "@/shared/lib";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/shared/ui/sidebar";
+import { Separator } from "@/shared/ui/separator";
+import { useUserStore } from "@/entities/user";
+import { ROUTE_NAMES } from "../constants";
+import { LoginPage, UpdatePasswordPage } from "@/pages/auth";
+import { LocationSelector } from "@/entities/locations";
+import { AppSidebar } from "@/widgets/nav";
+import { NotificationsMenu } from "@/widgets/notifications";
+import { ProtectedRoute } from "../providers/ProtectedRoute";
+import { InventoryPage } from "@/pages/inventario";
+import { RepuestosPage } from "@/pages/spares";
+import { RecordsPage } from "@/pages/records";
+import Inventory from "@/pages/Inventory";
+import { ConteoPage } from "@/pages/count";
+import { RequestsPage } from "@/pages/requests";
+import { RequestsCreatedPage } from "@/features/spares-request-workshop";
+import { RequestsSentPage } from "@/features/requests-sended";
+import { Toaster } from "sonner";
+import NotFound from "@/pages/NotFound";
 
 function App() {
   useSupabaseAuthListener();
