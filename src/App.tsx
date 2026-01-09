@@ -19,11 +19,10 @@ import {
   BreadcrumbSeparator,
 } from "./shared/ui/breadcrumb";
 import InventoryPage from "./pages/inventario/ui/InventoryPage";
-import RepuestosPage from "./features/repuestos/components/RepuestosPage";
 import RecordsPage from "./pages/records/ui/records-page";
-import RequestsPage from "./features/requests/components/RequestsPage";
-import RequestsCreatedPage from "./features/requests/components/RequestsCreatedPage";
-import RequestsSentPage from "./features/requests/components/RequestsSentPage";
+import RequestsPage from "./pages/requests/ui/RequestsPage";
+import RequestsCreatedPage from "./features/spares-request-workshop/ui/RequestsCreatedPage";
+import RequestsSentPage from "./features/requests-sended/ui/RequestsSentPage";
 import { Toaster } from "./shared/ui/sonner";
 import ConteoPage from "./pages/count/ui/ConteoPage";
 import { useUserStore } from "@/entities/user/model/useUserStore";
@@ -31,9 +30,10 @@ import { LoginPage } from "./pages/auth/ui/login-page";
 import { useSupabaseAuthListener } from "./shared/lib/useSupabaseAuthListener";
 import { UpdatePasswordPage } from "./pages/auth/ui/update-password-page";
 
-import { LocationSelector } from "./components/common/LocationSelector";
+import { LocationSelector } from "./entities/locations/ui/LocationSelector";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { NotificationsMenu } from "./widgets/notifications/ui/NotificationsMenu";
+import { RepuestosPage } from "./pages/spares";
 
 const ROUTE_NAMES: Record<string, string> = {
   "/": "Inventario",
@@ -127,7 +127,7 @@ function App() {
                     <Routes>
                       {/* Protected Routes Wrapper */}
                       <Route element={<ProtectedRoute routeKey="inventario" />}>
-                         <Route path="/" element={<InventoryPage />} />
+                        <Route path="/" element={<InventoryPage />} />
                       </Route>
 
                       <Route element={<ProtectedRoute routeKey="repuestos" />}>
@@ -135,14 +135,14 @@ function App() {
                       </Route>
 
                       <Route element={<ProtectedRoute routeKey="registros" />}>
-                         <Route path="/registros" element={<RecordsPage />} />
+                        <Route path="/registros" element={<RecordsPage />} />
                       </Route>
 
                       {/* Note: 'inventario' route (legacy) might need a permission check or just link to 'mi_inventario' perm?
                           For now, I'll protect it with 'inventario' as well. */}
                       <Route element={<ProtectedRoute routeKey="inventario" />}>
-                         <Route path="/inventario" element={<Inventory />} />
-                         <Route path="/inventario/conteo" element={<ConteoPage />} />
+                        <Route path="/inventario" element={<Inventory />} />
+                        <Route path="/inventario/conteo" element={<ConteoPage />} />
                       </Route>
 
                       <Route element={<ProtectedRoute routeKey="solicitudes" />}>

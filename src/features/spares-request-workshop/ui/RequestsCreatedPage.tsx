@@ -1,7 +1,4 @@
 import { useEffect, useState } from "react";
-import { useRequestsStore } from "../store/useRequestsStore";
-import { getLocations, createRequest, getRequestHistory, type RequestHistoryItem } from "../services/requestsService";
-import { useUserStore } from "@/entities/user/model/useUserStore";
 import { Button } from "@/shared/ui/button";
 import {
   Select,
@@ -22,7 +19,12 @@ import {
   TableRow,
 } from "@/shared/ui/table";
 import { toast } from "sonner";
-import { sendWhatsAppNotification } from "@/shared/lib/utils";
+import { useRequestsStore } from "@/features/spares-request-workshop";
+import { useUserStore } from "@/entities/user";
+import { getLocations } from "@/entities/locations";
+import { getRequestHistory, type RequestHistoryItem } from "@/entities/requests";
+import { createRequest } from "../api";
+import { sendWhatsAppNotification } from "@/shared/lib";
 
 export default function RequestsCreatedPage() {
   const {
@@ -249,12 +251,11 @@ export default function RequestsCreatedPage() {
                     <TableCell>{new Date(item.fecha_creacion).toLocaleDateString()}</TableCell>
                     <TableCell>{item.nombre_destino}</TableCell>
                     <TableCell>
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        item.estado === 'pendiente' ? 'bg-yellow-100 text-yellow-800' :
+                      <span className={`px-2 py-1 rounded-full text-xs ${item.estado === 'pendiente' ? 'bg-yellow-100 text-yellow-800' :
                         item.estado === 'aprobada' ? 'bg-green-100 text-green-800' :
-                        item.estado === 'rechazada' ? 'bg-red-100 text-red-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
+                          item.estado === 'rechazada' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
+                        }`}>
                         {item.estado}
                       </span>
                     </TableCell>

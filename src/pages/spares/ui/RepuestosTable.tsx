@@ -19,16 +19,8 @@ import { Badge } from "@/shared/ui/badge";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { toast } from "sonner";
-import type { Repuesto } from "../types";
-
-interface RepuestosTableProps {
-    items: Repuesto[];
-    orderBy: keyof Repuesto;
-    direction: 'asc' | 'desc';
-    onSort: (column: keyof Repuesto) => void;
-    onEdit: (repuesto: Repuesto) => void;
-    onDelete: (id: string) => void;
-}
+import type { Repuesto } from "@/entities/repuestos";
+import type { RepuestosTableProps } from "../model/types";
 
 const SortIcon = ({
     column,

@@ -1,0 +1,1 @@
+export { getLocations } from "./api";

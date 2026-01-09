@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
-import { Pagination } from "@/components/common/Pagination";
+import { Pagination } from "@/widgets/pagination/ui/Pagination";
 import { useMemo, useState } from "react";
 import {
   AlertCircle,

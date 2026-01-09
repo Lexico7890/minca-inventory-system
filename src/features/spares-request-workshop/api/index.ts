@@ -1,5 +1,5 @@
 import { supabase } from "@/shared/api";
-import type { CartItem, CreateRequestData, Destination, RequestHistoryItem } from "../model/types";
+import type { CartItem, CreateRequestData } from "../model/types";
 
 export async function getCartItems(locationId: string): Promise<CartItem[]> {
     const { data, error } = await supabase
@@ -10,19 +10,6 @@ export async function getCartItems(locationId: string): Promise<CartItem[]> {
 
     if (error) {
         console.error('Error fetching cart items:', error);
-        throw error;
-    }
-
-    return data || [];
-}
-
-export async function getLocations(): Promise<Destination[]> {
-    const { data, error } = await supabase
-        .from('localizacion')
-        .select('id_localizacion, nombre, telefono');
-
-    if (error) {
-        console.error('Error fetching locations:', error);
         throw error;
     }
 
@@ -63,20 +50,6 @@ export async function createRequest(requestData: CreateRequestData): Promise<voi
         console.error('Error creating detalles_solicitud:', detallesError);
         throw detallesError;
     }
-}
-
-export async function getRequestHistory(): Promise<RequestHistoryItem[]> {
-    const { data, error } = await supabase
-        .from('v_historial_solicitudes')
-        .select('*')
-        .order('fecha_creacion', { ascending: false });
-
-    if (error) {
-        console.error('Error fetching request history:', error);
-        throw error;
-    }
-
-    return data || [];
 }
 
 export async function addCartItem(

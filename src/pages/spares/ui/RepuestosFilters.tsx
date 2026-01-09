@@ -8,16 +8,7 @@ import {
 } from "@/shared/ui/select";
 import { Button } from "@/shared/ui/button";
 import { Search, X } from "lucide-react";
-
-interface RepuestosFiltersProps {
-    search: string;
-    tipo: string;
-    descontinuado: string;
-    onSearchChange: (value: string) => void;
-    onTipoChange: (value: string) => void;
-    onDescontinuadoChange: (value: string) => void;
-    onReset: () => void;
-}
+import type { RepuestosFiltersProps } from "../model/types";
 
 export function RepuestosFilters({
     search,

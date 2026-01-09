@@ -2,7 +2,6 @@ import { useState, useRef } from "react";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { AlertCircle, CheckCircle2, FileSpreadsheet } from "lucide-react";
-import { bulkUploadRepuestos } from "../services";
 import { toast } from "sonner";
 import {
     Dialog,
@@ -13,10 +12,8 @@ import {
     DialogTrigger,
 } from "@/shared/ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/shared/ui/alert";
-
-interface BulkUploadProps {
-    onSuccess: () => void;
-}
+import type { BulkUploadProps } from "../model/types";
+import { bulkUploadRepuestos } from "../api";
 
 export function BulkUpload({ onSuccess }: BulkUploadProps) {
     const [file, setFile] = useState<File | null>(null);
