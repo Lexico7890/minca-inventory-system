@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { GlobalErrorBoundary, initSentry } from './app'
 import { queryClient } from './shared/lib'
 import App from './app/ui/App'
+import './app/styles/index.css'
 
 // Initialize Sentry before rendering
 initSentry()

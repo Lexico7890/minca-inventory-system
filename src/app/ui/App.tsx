@@ -20,6 +20,7 @@ import { RequestsCreatedPage } from "@/features/spares-request-workshop";
 import { RequestsSentPage } from "@/features/requests-sended";
 import { Toaster } from "sonner";
 import NotFound from "@/pages/NotFound";
+import "../styles/App.css";
 
 function App() {
   useSupabaseAuthListener();
