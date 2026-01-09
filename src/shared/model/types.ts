@@ -7,3 +7,9 @@ export interface ActionItem {
     disabled?: boolean;
     className?: string; // For styling specific actions (e.g., destructive)
 }
+
+export interface Destination {
+    id_localizacion: string;
+    nombre: string;
+    telefono: string;
+}

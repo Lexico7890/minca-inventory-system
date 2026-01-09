@@ -10,16 +10,6 @@ export interface Repuesto {
     created_at: string;
 }
 
-export interface RepuestoFormData {
-    referencia: string;
-    nombre: string;
-    cantidad_minima: number;
-    descontinuado: boolean;
-    tipo: string;
-    fecha_estimada?: string | null;
-    url_imagen?: string | null;
-}
-
 export interface RepuestosParams {
     page?: number;
     limit?: number;
@@ -37,4 +27,14 @@ export interface PaginatedRepuestosResponse {
     page: number;
     limit: number;
     page_count: number;
+}
+
+export interface RepuestoFormData {
+    referencia: string;
+    nombre: string;
+    cantidad_minima: number;
+    descontinuado: boolean;
+    tipo: string;
+    fecha_estimada?: string | null;
+    url_imagen?: string | null;
 }

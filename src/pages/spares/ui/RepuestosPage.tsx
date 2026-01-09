@@ -2,12 +2,6 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Button } from "@/shared/ui/button";
 import { Plus, RefreshCw } from "lucide-react";
-import { RepuestosTable } from "./RepuestosTable";
-import { RepuestosFilters } from "./RepuestosFilters";
-import { RepuestosForm } from "./RepuestosForm";
-import { BulkUpload } from "./BulkUpload";
-import { useRepuestosQuery, useRepuestosMutations } from "../hooks/useRepuestosQuery";
-import { Pagination } from "@/components/common/Pagination";
 import {
     Sheet,
     SheetContent,
@@ -25,9 +19,14 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/shared/ui/alert-dialog";
-import type { Repuesto, RepuestosParams } from "../types";
+import { useRepuestosMutations, useRepuestosQuery, type Repuesto, type RepuestosParams } from "@/entities/repuestos";
+import { BulkUpload } from "@/features/spares-upload";
+import { RepuestosFilters } from "./RepuestosFilters";
+import { RepuestosTable } from "./RepuestosTable";
+import { RepuestosForm } from "@/features/spares-create";
+import { Pagination } from "@/widgets/pagination";
 
-export default function RepuestosPage() {
+export function RepuestosPage() {
     // State for filters
     const [filters, setFilters] = useState<RepuestosParams>({
         page: 1,

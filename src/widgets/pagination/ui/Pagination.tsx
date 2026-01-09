@@ -12,15 +12,7 @@ import {
     ChevronsRight,
     ChevronDown,
 } from "lucide-react";
-
-interface PaginationProps {
-    currentPage: number;
-    totalPages: number;
-    totalItems: number;
-    itemsPerPage: number;
-    onPageChange: (page: number) => void;
-    onItemsPerPageChange: (limit: number) => void;
-}
+import type { PaginationProps } from "../model/types";
 
 const ITEMS_PER_PAGE_OPTIONS = [10, 25, 50, 100];
 

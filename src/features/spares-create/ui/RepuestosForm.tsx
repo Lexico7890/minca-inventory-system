@@ -17,8 +17,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/shared/ui/select";
-import type { Repuesto, RepuestoFormData } from "../types";
 import { useEffect } from "react";
+import type { Repuesto, RepuestoFormData } from "@/entities/repuestos";
 
 interface RepuestosFormProps {
     initialData?: Repuesto;

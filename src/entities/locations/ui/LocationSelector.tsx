@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/shared/api/supabase';
-import { useUserStore } from '@/entities/user/model/useUserStore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/shared/ui/card';
 import { Button } from '@/shared/ui/button';
 import { MapPin } from 'lucide-react';
-import type { UserLocation } from '@/types/common-types';
+import { useUserStore, type UserLocation } from '@/entities/user';
+import { supabase } from '@/shared/api';
 
 export function LocationSelector() {
     const { currentLocation, setCurrentLocation, isAuthenticated, sessionData } = useUserStore();
