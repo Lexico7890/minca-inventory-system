@@ -24,9 +24,9 @@ import { useUserStore } from "@/entities/user";
 import { getLocations } from "@/entities/locations";
 import { getRequestHistory, type RequestHistoryItem } from "@/entities/requests";
 import { createRequest } from "../api";
-import { sendWhatsAppNotification } from "@/shared/lib";
+import { sendWhatsAppNotification } from "../lib/sendWhatsAppNotification";
 
-export default function RequestsCreatedPage() {
+export function RequestsCreatedPage() {
   const {
     cartItems,
     destinations,

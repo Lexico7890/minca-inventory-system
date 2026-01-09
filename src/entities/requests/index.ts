@@ -1,2 +1,2 @@
 export { getRequestHistory } from "./api";
-export { type RequestHistoryItem } from "./model/types";
+export { type RequestHistoryItem, type CartItem } from "./model/types";

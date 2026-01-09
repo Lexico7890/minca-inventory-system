@@ -22,7 +22,7 @@ import { useUserStore } from "@/entities/user";
 import { useTechnicians } from "@/entities/technical";
 import { useRecordsStore } from "@/entities/records";
 import { useTechnicalMovements } from "../lib/useTechnicalMovement";
-import { AutocompleteInput } from "@/widgets/auto-complete-input";
+import { AutocompleteInput } from "@/entities/inventario";
 
 export function MovementsWorkshopForm() {
   const [orderNumber, setOrderNumber] = useState<string>("");
@@ -50,24 +50,24 @@ export function MovementsWorkshopForm() {
     // Intentionally syncing form state with external edit data
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrderNumber(movementToEdit.numero_orden || "");
-     
+
     setCountItems(movementToEdit.cantidad || 1);
 
     // Map 'tipo' string to ActionButtonGroup enum if possible
     // Assuming movementToEdit.tipo matches the enum values
     if (Object.values(ActionButtonGroup).includes(movementToEdit.tipo as ActionButtonGroup)) {
-       
+
       setActionButtonGroup(movementToEdit.tipo as ActionButtonGroup);
     }
 
     // Map 'concepto'
     // Assuming movementToEdit.concepto matches TIPY_CONCEPT
     if (Object.values(TIPY_CONCEPT).includes(movementToEdit.concepto as TIPY_CONCEPT)) {
-       
+
       setMovementConcept(movementToEdit.concepto as TIPY_CONCEPT);
     }
     if (movementToEdit.id_repuesto && movementToEdit.repuesto_nombre) {
-       
+
       setSelected({
         id_repuesto: movementToEdit.id_repuesto,
         referencia: movementToEdit.repuesto_referencia || "",
@@ -76,7 +76,7 @@ export function MovementsWorkshopForm() {
     }
 
     if (movementToEdit.id_tecnico_asignado) {
-       
+
       setSelectedTechnicianId(movementToEdit.id_tecnico_asignado);
     }
   }, [movementToEdit]);
@@ -124,7 +124,7 @@ export function MovementsWorkshopForm() {
       toast.info("La cantidad debe ser mayor a 0");
       return;
     }
-    
+
     const movementData = {
       id_localizacion: locationId,
       id_usuario_responsable: sessionData?.user?.id,

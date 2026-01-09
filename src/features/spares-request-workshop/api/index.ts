@@ -1,5 +1,6 @@
 import { supabase } from "@/shared/api";
-import type { CartItem, CreateRequestData } from "../model/types";
+import type { CreateRequestData } from "../model/types";
+import type { CartItem } from "@/entities/requests";
 
 export async function getCartItems(locationId: string): Promise<CartItem[]> {
     const { data, error } = await supabase

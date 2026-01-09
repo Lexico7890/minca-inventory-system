@@ -13,10 +13,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/ui/form";
-import AutocompleteInput from "@/shared/ui/AutocompleteInput";
-import { useUserStore } from "@/entities/user/model/useUserStore";
 import { createInventoryItem } from "../api";
 import { insertInventorySchema, type InsertInventoryFormValues } from "../model/schemas";
+import { useUserStore } from "@/entities/user";
+import { AutocompleteInput } from "@/entities/inventario";
 
 interface InventoryFormProps {
   onSuccess?: () => void;

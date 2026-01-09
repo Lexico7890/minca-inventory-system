@@ -10,7 +10,7 @@ import { useUserStore } from "@/entities/user";
 import { useCreateGuarantee } from "../lib/useCreateGuarantees";
 import { useTechnicians } from "@/entities/technical";
 import { uploadWarrantyImage } from "../api";
-import { AutocompleteInput } from "@/widgets/auto-complete-input";
+import { AutocompleteInput } from "@/entities/inventario";
 
 export function GuaranteesForm() {
   const { currentLocation, sessionData } = useUserStore();

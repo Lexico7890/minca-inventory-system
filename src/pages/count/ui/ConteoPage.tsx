@@ -9,7 +9,7 @@ import { PartialCountModal, sendCountData } from '@/features/count-spares';
 import { ConteoHistoryTable } from './ConteoHistoryTable';
 import { FileUpload } from './FileUpload';
 
-export default function ConteoPage() {
+export function ConteoPage() {
   const [files, setFiles] = useState<File[]>([]);
   const [isPartialCountModalOpen, setPartialCountModalOpen] = useState(false);
   const queryClient = useQueryClient();

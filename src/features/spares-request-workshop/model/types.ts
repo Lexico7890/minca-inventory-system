@@ -1,19 +1,5 @@
+import type { CartItem } from "@/entities/requests";
 import type { Destination } from "@/shared/model";
-
-export interface CartItem {
-    id_item_carrito: string;
-    id_usuario: string;
-    id_localizacion: string;
-    cantidad: number;
-    created_at: string;
-    nombre_solicitante: string;
-    rol_solicitante: string;
-    id_repuesto: string;
-    referencia: string;
-    nombre_repuesto: string;
-    url_imagen: string | null;
-    stock_actual_en_taller: number;
-}
 
 export interface RequestsState {
     cartItems: CartItem[];
@@ -33,4 +19,10 @@ export interface CreateRequestData {
     id_usuario_solicitante: string;
     observaciones_generales: string;
     items: Array<{ id_repuesto: string; cantidad: number }>;
+}
+
+export interface RequestContext {
+    origen: string;
+    destino: string;
+    solicitante: string;
 }

@@ -10,10 +10,6 @@ import {
   Settings2,
   Warehouse,
 } from "lucide-react"
-
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
@@ -23,7 +19,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/shared/ui/sidebar"
-import { useUserStore } from "@/entities/user/model/useUserStore"
+import { useUserStore } from "@/entities/user";
+import { NavMain, NavSecondary, NavUser } from "@/widgets/nav";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const sessionData = useUserStore((state) => state.sessionData);

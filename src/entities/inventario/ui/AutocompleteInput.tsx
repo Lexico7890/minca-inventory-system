@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Input } from "@/shared/ui/input";
-import type { AutocompleteInputProps } from "../model/types";
-import { useSearchSpares, type InventoryItem } from "@/entities/inventario";
 import { Badge } from "@/shared/ui/badge";
+import type { AutocompleteInputProps, InventoryItem } from "../model/types";
+import { useSearchSpares } from "../lib/useSearchSpares";
 
 export function AutocompleteInput({
   selected,
@@ -33,7 +33,7 @@ export function AutocompleteInput({
     // as that usually happens when the user types (which sets selected to null).
     // If selected is cleared externally, we might want to clear query,
     // but the current logic in onChange handles the nulling.
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [selected]); // Removed 'query' from deps to avoid circular loop, though logic handles it.
 
   // Use React Query hook for searching

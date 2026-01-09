@@ -1,4 +1,6 @@
 export { useIsMobile } from "./use-mobile"
 export { cn } from "./utils"
 export { handleSupabaseError } from "./error-handler"
-export { sendWhatsAppNotification } from "./utils"
+export { ThemeProvider } from "./theme-provider"
+export { queryClient } from "./queryClient"
+export { useSupabaseAuthListener } from "../../entities/user/lib/useSupabaseAuthListener"

@@ -1,0 +1,1 @@
+export { ConteoPage } from "./ui/ConteoPage";
