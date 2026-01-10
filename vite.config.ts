@@ -14,7 +14,7 @@ export default defineConfig({
       includeAssets: ['minca_logo.svg', 'favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
         name: 'Minca Inventory System',
-        short_name: 'MincaInv',
+        short_name: 'M.I.S.',
         description: 'Sistema de inventario para Minca',
         theme_color: '#ffffff',
         icons: [
