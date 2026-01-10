@@ -7,7 +7,7 @@ import { supabase } from "@/shared/api";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function sendCountData(processedData: any, type: 'completo') {
-    const { data, error } = await supabase.rpc('funcion_conteo', {
+    const { data, error } = await supabase.rpc('procesar_comparacion_excel', {
         items: processedData,
         tipo_conteo: type,
     });
