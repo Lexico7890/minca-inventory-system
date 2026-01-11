@@ -1,8 +1,12 @@
 import { useLocation } from 'react-router-dom';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
-import { HelpCircle } from 'lucide-react';
+import { Input } from '@/shared/ui/input';
+import { Button } from '@/shared/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
+import { HelpCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface CountResult {
   referencia: string;
@@ -17,6 +21,63 @@ interface CountResult {
 export function ResultadosConteoPage() {
   const location = useLocation();
   const results: CountResult[] = location.state?.results || [];
+
+  // Filter states
+  const [referenciaFilter, setReferenciaFilter] = useState('');
+  const [diferenciaFilter, setDiferenciaFilter] = useState<'all' | 'positive' | 'negative'>('all');
+  const [existeEnBdFilter, setExisteEnBdFilter] = useState<'all' | 'true' | 'false'>('all');
+  const [existeEnUbicacionFilter, setExisteEnUbicacionFilter] = useState<'all' | 'true' | 'false'>('all');
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+
+  // Apply filters
+  const filteredResults = useMemo(() => {
+    return results.filter((item) => {
+      // Filter by referencia
+      if (referenciaFilter && !item.referencia.toLowerCase().includes(referenciaFilter.toLowerCase())) {
+        return false;
+      }
+
+      // Filter by diferencia
+      if (diferenciaFilter === 'positive' && item.diferencia <= 0) {
+        return false;
+      }
+      if (diferenciaFilter === 'negative' && item.diferencia >= 0) {
+        return false;
+      }
+
+      // Filter by existe_en_bd
+      if (existeEnBdFilter === 'true' && !item.existe_en_bd) {
+        return false;
+      }
+      if (existeEnBdFilter === 'false' && item.existe_en_bd) {
+        return false;
+      }
+
+      // Filter by existe_en_ubicacion
+      if (existeEnUbicacionFilter === 'true' && !item.existe_en_ubicacion) {
+        return false;
+      }
+      if (existeEnUbicacionFilter === 'false' && item.existe_en_ubicacion) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [results, referenciaFilter, diferenciaFilter, existeEnBdFilter, existeEnUbicacionFilter]);
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredResults.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedResults = filteredResults.slice(startIndex, endIndex);
+
+  // Reset to first page when filters change
+  const handleFilterChange = () => {
+    setCurrentPage(1);
+  };
 
   const getRowClass = (result: CountResult) => {
     if (!result.existe_en_bd) {
@@ -62,6 +123,88 @@ export function ResultadosConteoPage() {
         </Popover>
       </div>
 
+      {/* Filters Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Filtros</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Referencia</label>
+              <Input
+                placeholder="Buscar por referencia..."
+                value={referenciaFilter}
+                onChange={(e) => {
+                  setReferenciaFilter(e.target.value);
+                  handleFilterChange();
+                }}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Diferencia</label>
+              <Select
+                value={diferenciaFilter}
+                onValueChange={(value: 'all' | 'positive' | 'negative') => {
+                  setDiferenciaFilter(value);
+                  handleFilterChange();
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas</SelectItem>
+                  <SelectItem value="positive">Positiva</SelectItem>
+                  <SelectItem value="negative">Negativa</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Existe en BD</label>
+              <Select
+                value={existeEnBdFilter}
+                onValueChange={(value: 'all' | 'true' | 'false') => {
+                  setExisteEnBdFilter(value);
+                  handleFilterChange();
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="true">Sí</SelectItem>
+                  <SelectItem value="false">No</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Existe en Ubicación</label>
+              <Select
+                value={existeEnUbicacionFilter}
+                onValueChange={(value: 'all' | 'true' | 'false') => {
+                  setExisteEnUbicacionFilter(value);
+                  handleFilterChange();
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="true">Sí</SelectItem>
+                  <SelectItem value="false">No</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Detalles del Conteo</CardTitle>
@@ -79,8 +222,8 @@ export function ResultadosConteoPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {results.length > 0 ? (
-                  results.map((item) => (
+                {paginatedResults.length > 0 ? (
+                  paginatedResults.map((item) => (
                     <TableRow key={item.referencia} className={getRowClass(item)}>
                       <TableCell>{item.referencia}</TableCell>
                       <TableCell>{item.nombre}</TableCell>
@@ -99,6 +242,38 @@ export function ResultadosConteoPage() {
               </TableBody>
             </Table>
           </div>
+
+          {/* Pagination Controls */}
+          {filteredResults.length > 0 && (
+            <div className="flex items-center justify-between mt-4">
+              <div className="text-sm text-muted-foreground">
+                Mostrando {startIndex + 1} a {Math.min(endIndex, filteredResults.length)} de {filteredResults.length} resultados
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Anterior
+                </Button>
+                <div className="text-sm">
+                  Página {currentPage} de {totalPages}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Siguiente
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
