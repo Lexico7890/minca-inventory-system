@@ -52,6 +52,7 @@ export function LoginForm({
       <div className="relative bg-card z-10 flex flex-col gap-6 bg-background p-6 rounded-xl">
         <Card className="border-none shadow-none p-0"> {/* Removemos bordes y padding extra de la Card interna */}
           <CardHeader className="text-center">
+            <img src="/minca_logo.svg" alt="Minca Logo" className="size-20 mx-auto mb-2" />
             <CardTitle className="text-xl">Minca Inventory System</CardTitle>
             <CardDescription>
               {isResettingPassword
