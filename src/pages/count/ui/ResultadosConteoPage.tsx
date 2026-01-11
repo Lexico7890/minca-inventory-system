@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table';
@@ -6,7 +6,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 import { Input } from '@/shared/ui/input';
 import { Button } from '@/shared/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
-import { HelpCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
+import { Textarea } from '@/shared/ui/textarea';
+import { HelpCircle, ChevronLeft, ChevronRight, Send } from 'lucide-react';
+import { registrarConteo } from '../api';
+import { toast } from 'sonner';
 
 interface CountResult {
   referencia: string;
@@ -20,6 +24,7 @@ interface CountResult {
 
 export function ResultadosConteoPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const results: CountResult[] = location.state?.results || [];
 
   // Filter states
@@ -31,6 +36,11 @@ export function ResultadosConteoPage() {
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+
+  // Modal states
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [observaciones, setObservaciones] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Apply filters
   const filteredResults = useMemo(() => {
@@ -89,38 +99,82 @@ export function ResultadosConteoPage() {
     return '';
   };
 
+  // Calculate statistics
+  const totalItemsAuditados = results.length;
+  const totalDiferenciaEncontrada = results.filter(item => item.diferencia !== 0).length;
+
+  // Handle send data
+  const handleSendData = async () => {
+    setIsSubmitting(true);
+    try {
+      const id_localizacion = localStorage.getItem('minca_location_id');
+      const id_usuario = localStorage.getItem('minca_user_id');
+
+      if (!id_localizacion || !id_usuario) {
+        toast.error('No se encontró la información de localización o usuario.');
+        return;
+      }
+
+      await registrarConteo({
+        id_localizacion,
+        id_usuario,
+        tipo: 'total',
+        total_items_auditados: totalItemsAuditados,
+        total_diferencia_encontrada: totalDiferenciaEncontrada,
+        observaciones: observaciones || undefined,
+        items: results,
+      });
+
+      toast.success('El conteo ha sido registrado correctamente.');
+
+      setIsModalOpen(false);
+      navigate('/inventario/conteo');
+    } catch (error) {
+      console.error('Error sending count data:', error);
+      toast.error('Hubo un error al registrar el conteo.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="container mx-auto p-2 md:p-6 space-y-6">
-      <div className="flex items-center gap-4">
-        <h1 className="text-4xl font-bold">Resultados del Conteo</h1>
-        <Popover>
-          <PopoverTrigger asChild>
-            <button className="focus:outline-none mt-1">
-              <HelpCircle className="h-6 w-6 text-muted-foreground" />
-            </button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80">
-            <div className="grid gap-4">
-              <div className="space-y-2">
-                <h4 className="font-medium leading-none">Leyenda de Colores</h4>
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-start gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500 mt-1" />
-                  <p className="text-sm text-muted-foreground">
-                    <span className="font-bold text-primary">Rojo:</span> El producto no existe en la base de datos.
-                  </p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <h1 className="text-4xl font-bold">Resultados del Conteo</h1>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="focus:outline-none mt-1">
+                <HelpCircle className="h-6 w-6 text-muted-foreground" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="grid gap-4">
+                <div className="space-y-2">
+                  <h4 className="font-medium leading-none">Leyenda de Colores</h4>
                 </div>
-                <div className="flex items-start gap-2">
-                  <div className="w-3 h-3 rounded-full bg-orange-500 mt-1" />
-                  <p className="text-sm text-muted-foreground">
-                  <span className="font-bold text-primary">Naranja:</span> El producto no se encontró en la ubicación esperada.
-                  </p>
+                <div className="grid gap-2">
+                  <div className="flex items-start gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500 mt-1" />
+                    <p className="text-sm text-muted-foreground">
+                      <span className="font-bold text-primary">Rojo:</span> El producto no existe en la base de datos.
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <div className="w-3 h-3 rounded-full bg-orange-500 mt-1" />
+                    <p className="text-sm text-muted-foreground">
+                    <span className="font-bold text-primary">Naranja:</span> El producto no se encontró en la ubicación esperada.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </PopoverContent>
-        </Popover>
+            </PopoverContent>
+          </Popover>
+        </div>
+        <Button onClick={() => setIsModalOpen(true)} className="gap-2">
+          <Send className="h-4 w-4" />
+          Enviar Datos
+        </Button>
       </div>
 
       {/* Filters Section */}
@@ -276,6 +330,55 @@ export function ResultadosConteoPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Modal for observations */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Confirmar Envío de Conteo</DialogTitle>
+            <DialogDescription>
+              Está a punto de enviar los resultados del conteo. Puede agregar observaciones opcionales.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">
+                <strong>Total de items auditados:</strong> {totalItemsAuditados}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                <strong>Total de diferencias encontradas:</strong> {totalDiferenciaEncontrada}
+              </p>
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="observaciones" className="text-sm font-medium">
+                Observaciones (opcional)
+              </label>
+              <Textarea
+                id="observaciones"
+                placeholder="Ingrese observaciones sobre el conteo..."
+                value={observaciones}
+                onChange={(e) => setObservaciones(e.target.value)}
+                rows={4}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsModalOpen(false)}
+              disabled={isSubmitting}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleSendData}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Enviando...' : 'Confirmar'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
