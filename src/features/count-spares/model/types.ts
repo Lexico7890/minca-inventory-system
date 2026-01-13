@@ -9,4 +9,6 @@ export interface CountItem {
     nombre: string;
     cantidad_sistema?: number;
     real?: number;
+    pq?: number;
+    diferencia?: number;
 }
