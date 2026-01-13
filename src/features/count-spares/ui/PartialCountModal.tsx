@@ -30,7 +30,7 @@ export function PartialCountModal({ isOpen, onOpenChange }: PartialCountModalPro
 
   useEffect(() => {
     if (data) {
-      const initialItems = data.map(item => {
+      const initialItems = data.map((item: CountItem) => {
         const real = item.real || 0;
         const pq = item.pq || 0;
         const cantidad_sistema = item.cantidad_sistema || 0;
