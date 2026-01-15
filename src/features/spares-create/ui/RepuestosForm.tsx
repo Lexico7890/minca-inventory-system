@@ -17,12 +17,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/shared/ui/select";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Repuesto, RepuestoFormData } from "@/entities/repuestos";
+
+type ActionType = 'solicitar' | null;
 
 interface RepuestosFormProps {
     initialData?: Repuesto;
-    onSubmit: (data: RepuestoFormData) => void;
+    onSubmit: (data: RepuestoFormData, selectedAction: ActionType) => void;
     isLoading?: boolean;
     onCancel: () => void;
     readOnly?: boolean;
@@ -35,11 +37,12 @@ export function RepuestosForm({
     onCancel,
     readOnly = false,
 }: RepuestosFormProps) {
+    const [selectedAction, setSelectedAction] = useState<ActionType>(null);
     const form = useForm<RepuestoFormData>({
         defaultValues: {
             referencia: "",
             nombre: "",
-            cantidad_minima: 0,
+            stock_minimo: 0,
             descontinuado: false,
             tipo: "General",
             fecha_estimada: null,
@@ -52,18 +55,42 @@ export function RepuestosForm({
             form.reset({
                 referencia: initialData.referencia,
                 nombre: initialData.nombre,
-                cantidad_minima: initialData.cantidad_minima,
+                stock_minimo: initialData.stock_minimo,
                 descontinuado: initialData.descontinuado,
                 tipo: initialData.tipo,
                 fecha_estimada: initialData.fecha_estimada,
                 url_imagen: initialData.url_imagen || "",
             });
         }
+        // Reset action when data changes
+        setSelectedAction(null);
     }, [initialData, form]);
+
+    const handleFormSubmit = (data: RepuestoFormData) => {
+        onSubmit(data, selectedAction);
+    };
+
+    const toggleAction = (action: ActionType) => {
+        if (readOnly) return;
+        setSelectedAction(prev => (prev === action ? null : action));
+    };
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
+            <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4 p-4">
+                {initialData && ( // Solo mostrar si estamos editando
+                    <div className="grid grid-cols-1 gap-3">
+                        <Button
+                            type="button"
+                            variant={selectedAction === "solicitar" ? "default" : "outline"}
+                            className="w-full bg-blue-300 hover:bg-blue-400"
+                            onClick={() => toggleAction('solicitar')}
+                            disabled={readOnly}
+                        >
+                            Solicitar
+                        </Button>
+                    </div>
+                )}
                 <fieldset disabled={readOnly} className="space-y-4">
                     <FormField
                         control={form.control}
@@ -130,11 +157,11 @@ export function RepuestosForm({
 
                         <FormField
                             control={form.control}
-                            name="cantidad_minima"
+                            name="stock_minimo"
                             rules={{ required: "La cantidad mínima es obligatoria", min: 0 }}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Cantidad Mínima</FormLabel>
+                                    <FormLabel>Stock Mínimo</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="number"
