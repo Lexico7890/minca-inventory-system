@@ -135,26 +135,18 @@ export function RepuestosPage() {
 
     const handleSubmitForm = async (formData: RepuestoFormData, selectedAction: ActionType) => {
         try {
-            // Create a mutable copy of formData to safely modify it
-            const dataToSubmit: Partial<RepuestoFormData> = { ...formData };
-
-            // Do not send 'cantidad_minima' to the repuestos table update
-            delete (dataToSubmit as Partial<RepuestoFormData> & { cantidad_minima?: number })['cantidad_minima'];
-
-            // Determine if there are changes to save by comparing with the original data
-            // We must also exclude 'cantidad_minima' from the comparison object
-            const originalDataForComparison = editingRepuesto ? {
-                referencia: editingRepuesto.referencia,
-                nombre: editingRepuesto.nombre,
-                descontinuado: editingRepuesto.descontinuado,
-                tipo: editingRepuesto.tipo,
-                fecha_estimada: editingRepuesto.fecha_estimada,
-                url_imagen: editingRepuesto.url_imagen || "",
-            } : null;
-
+            // Determine if there are changes to save
             const hasChanges = editingRepuesto
-                ? JSON.stringify(dataToSubmit) !== JSON.stringify(originalDataForComparison)
-                : true;
+                ? JSON.stringify(formData) !== JSON.stringify({
+                    referencia: editingRepuesto.referencia,
+                    nombre: editingRepuesto.nombre,
+                    cantidad_minima: editingRepuesto.cantidad_minima,
+                    descontinuado: editingRepuesto.descontinuado,
+                    tipo: editingRepuesto.tipo,
+                    fecha_estimada: editingRepuesto.fecha_estimada,
+                    url_imagen: editingRepuesto.url_imagen || "",
+                })
+                : true; // Always true for new items
 
             if (!hasChanges && !selectedAction) {
                 toast.info("No hay cambios para guardar.");
@@ -165,11 +157,9 @@ export function RepuestosPage() {
             // Perform Update or Create
             if (hasChanges) {
                 if (editingRepuesto) {
-                    await updateMutation.mutateAsync({ id: editingRepuesto.id_repuesto, data: dataToSubmit });
+                    await updateMutation.mutateAsync({ id: editingRepuesto.id_repuesto, data: formData });
                 } else {
-                    // For creation, we might need the original formData with 'cantidad_minima'
-                    // but the user says it's not in the table, so we send the modified one.
-                    await createMutation.mutateAsync(dataToSubmit as RepuestoFormData);
+                    await createMutation.mutateAsync(formData);
                 }
             }
 
@@ -195,6 +185,7 @@ export function RepuestosPage() {
             } else if (hasChanges && !selectedAction) {
                 toast.success(editingRepuesto ? "Repuesto actualizado." : "Repuesto creado.");
             }
+
 
             setIsSheetOpen(false);
         } catch (error) {
