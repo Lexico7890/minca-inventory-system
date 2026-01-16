@@ -14,7 +14,7 @@ import {
     DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
 import { Button } from "@/shared/ui/button";
-import { MoreHorizontal, ArrowUpDown, Edit, Trash2, ShoppingCart } from "lucide-react";
+import { MoreHorizontal, ArrowUpDown, Edit, Trash2, ShoppingCart, Eye } from "lucide-react";
 import { Badge } from "@/shared/ui/badge";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -43,8 +43,9 @@ export function RepuestosTable({
     onEdit,
     onDelete,
     onRequest,
+    onShowImage,
     canDelete = true,
-}: RepuestosTableProps & { canDelete?: boolean; onRequest?: (item: Repuesto) => void }) {
+}: RepuestosTableProps & { canDelete?: boolean; onRequest?: (item: Repuesto) => void, onShowImage: (item: Repuesto) => void }) {
     const handleCopy = (text: string) => {
         navigator.clipboard.writeText(text);
         toast.success("Referencia copiada al portapapeles");
@@ -73,11 +74,8 @@ export function RepuestosTable({
                                 <SortIcon column="tipo" orderBy={orderBy} direction={direction} />
                             </div>
                         </TableHead>
-                        <TableHead className="cursor-pointer" onClick={() => onSort('fecha_estimada')}>
-                            <div className="flex items-center">
-                                Fecha Estimada
-                                <SortIcon column="fecha_estimada" orderBy={orderBy} direction={direction} />
-                            </div>
+                        <TableHead>
+                            Imagen
                         </TableHead>
                         <TableHead className="cursor-pointer" onClick={() => onSort('descontinuado')}>
                             <div className="flex items-center">
@@ -110,9 +108,14 @@ export function RepuestosTable({
                                     <Badge variant="outline">{item.tipo}</Badge>
                                 </TableCell>
                                 <TableCell>
-                                    {item.fecha_estimada
-                                        ? format(new Date(item.fecha_estimada), "PPP", { locale: es })
-                                        : "-"}
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => onShowImage(item)}
+                                        disabled={!item.url_imagen}
+                                    >
+                                        <Eye className="h-4 w-4" />
+                                    </Button>
                                 </TableCell>
                                 <TableCell>
                                     <Badge variant={item.descontinuado ? "destructive" : "default"}>
