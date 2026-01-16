@@ -29,8 +29,6 @@ import { useUserStore } from "@/entities/user";
 import { useRequestsStore } from "@/features/spares-request-workshop";
 import { toast } from "sonner";
 
-type ActionType = 'solicitar' | null;
-
 export function RepuestosPage() {
     // State for filters
     const [filters, setFilters] = useState<RepuestosParams>({
@@ -153,22 +151,23 @@ export function RepuestosPage() {
         }
     };
 
-    const handleSubmitForm = async (formData: RepuestoFormData, selectedAction: ActionType) => {
+    const handleSubmitForm = async (formData: RepuestoFormData) => {
         try {
             // Determine if there are changes to save
             const hasChanges = editingRepuesto
                 ? JSON.stringify(formData) !== JSON.stringify({
                     referencia: editingRepuesto.referencia,
                     nombre: editingRepuesto.nombre,
-                    cantidad_minima: editingRepuesto.cantidad_minima,
                     descontinuado: editingRepuesto.descontinuado,
                     tipo: editingRepuesto.tipo,
                     fecha_estimada: editingRepuesto.fecha_estimada,
                     url_imagen: editingRepuesto.url_imagen || "",
+                    marca: editingRepuesto.marca || "MINCA",
+                    descripcion: editingRepuesto.descripcion || "",
                 })
                 : true; // Always true for new items
 
-            if (!hasChanges && !selectedAction) {
+            if (!hasChanges) {
                 toast.info("No hay cambios para guardar.");
                 setIsSheetOpen(false);
                 return;
@@ -182,30 +181,6 @@ export function RepuestosPage() {
                     await createMutation.mutateAsync(formData);
                 }
             }
-
-            // Handle Action
-            if (selectedAction === 'solicitar' && editingRepuesto) {
-                if (!sessionData?.user?.id || !currentLocation?.id_localizacion) {
-                    toast.error("No se pudo identificar al usuario o localización para la solicitud.");
-                } else {
-                    await addItemToCart(
-                        sessionData.user.id,
-                        currentLocation.id_localizacion,
-                        editingRepuesto.id_repuesto
-                    );
-                    toast.success(`"${editingRepuesto.nombre}" agregado a solicitudes.`);
-                }
-            }
-
-            // Combine toast messages
-            if (hasChanges && selectedAction) {
-                toast.success("Repuesto actualizado y solicitud enviada.");
-            } else if (!hasChanges && selectedAction) {
-                // This case is handled by the addItemToCart toast already
-            } else if (hasChanges && !selectedAction) {
-                toast.success(editingRepuesto ? "Repuesto actualizado." : "Repuesto creado.");
-            }
-
 
             setIsSheetOpen(false);
         } catch (error) {
