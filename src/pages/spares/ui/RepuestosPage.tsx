@@ -133,6 +133,26 @@ export function RepuestosPage() {
         }
     };
 
+    const handleRequest = async (repuesto: Repuesto) => {
+        if (!sessionData?.user?.id || !currentLocation?.id_localizacion) {
+            toast.error("No se pudo identificar al usuario o localización para la solicitud.");
+            return;
+        }
+
+        try {
+            await addItemToCart(
+                sessionData.user.id,
+                currentLocation.id_localizacion,
+                repuesto.id_repuesto,
+                1
+            );
+            toast.success(`"${repuesto.nombre}" agregado a solicitudes.`);
+        } catch (error) {
+            console.error(error);
+            toast.error("No se pudo realizar la acción");
+        }
+    };
+
     const handleSubmitForm = async (formData: RepuestoFormData, selectedAction: ActionType) => {
         try {
             // Determine if there are changes to save
@@ -250,6 +270,7 @@ export function RepuestosPage() {
                                 onSort={handleSort}
                                 onEdit={handleEdit}
                                 onDelete={handleDeleteClick}
+                                onRequest={handleRequest}
                                 canDelete={!isTecnico}
                             />
                             <div className="mt-4">
