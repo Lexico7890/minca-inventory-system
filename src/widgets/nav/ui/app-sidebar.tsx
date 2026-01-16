@@ -74,13 +74,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       icon: BookOpen,
       items: [],
       // permissionKey: undefined // Siempre visible si no se define
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [],
-    },
+    }
   ];
 
   const filteredNavMain = allNavItems.filter((item) => {
