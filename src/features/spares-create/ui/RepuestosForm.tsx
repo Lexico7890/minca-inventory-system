@@ -42,11 +42,12 @@ export function RepuestosForm({
         defaultValues: {
             referencia: "",
             nombre: "",
-            cantidad_minima: 0,
             descontinuado: false,
             tipo: "General",
             fecha_estimada: null,
             url_imagen: "",
+            marca: "MINCA",
+            descripcion: "",
         },
     });
 
@@ -55,42 +56,24 @@ export function RepuestosForm({
             form.reset({
                 referencia: initialData.referencia,
                 nombre: initialData.nombre,
-                cantidad_minima: initialData.cantidad_minima,
                 descontinuado: initialData.descontinuado,
                 tipo: initialData.tipo,
                 fecha_estimada: initialData.fecha_estimada,
                 url_imagen: initialData.url_imagen || "",
+                marca: initialData.marca || "MINCA",
+                descripcion: initialData.descripcion || "",
             });
         }
-        // Reset action when data changes
         setSelectedAction(null);
-    }, [initialData, form]);
+    }, [initialData]);
 
     const handleFormSubmit = (data: RepuestoFormData) => {
         onSubmit(data, selectedAction);
     };
 
-    const toggleAction = (action: ActionType) => {
-        if (readOnly) return;
-        setSelectedAction(prev => (prev === action ? null : action));
-    };
-
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4 p-4">
-                {initialData && ( // Solo mostrar si estamos editando
-                    <div className="grid grid-cols-1 gap-3">
-                        <Button
-                            type="button"
-                            variant={selectedAction === "solicitar" ? "default" : "outline"}
-                            className="w-full bg-blue-300 hover:bg-blue-400"
-                            onClick={() => toggleAction('solicitar')}
-                            disabled={readOnly}
-                        >
-                            Solicitar
-                        </Button>
-                    </div>
-                )}
                 <fieldset disabled={readOnly} className="space-y-4">
                     <FormField
                         control={form.control}
@@ -131,8 +114,8 @@ export function RepuestosForm({
                                 <FormItem>
                                     <FormLabel>Tipo</FormLabel>
                                     <Select
+                                        key={field.value} // ✅ Agregar key para forzar re-render
                                         onValueChange={field.onChange}
-                                        defaultValue={field.value}
                                         value={field.value}
                                     >
                                         <FormControl>
@@ -147,7 +130,7 @@ export function RepuestosForm({
                                             <SelectItem value="Frenos">Frenos</SelectItem>
                                             <SelectItem value="Suspension">Suspensión</SelectItem>
                                             <SelectItem value="Electrico">Eléctrico</SelectItem>
-                                            <SelectItem value="Carroceria">Carrocería</SelectItem>
+                                            <SelectItem value="Carrocería">Carrocería</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -157,17 +140,26 @@ export function RepuestosForm({
 
                         <FormField
                             control={form.control}
-                            name="cantidad_minima"
-                            rules={{ required: "La cantidad mínima es obligatoria", min: 0 }}
+                            name="marca"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Cantidad Mínima</FormLabel>
+                                    <FormLabel>Marca</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            type="number"
-                                            {...field}
-                                            onChange={(e) => field.onChange(parseInt(e.target.value))}
-                                        />
+                                        <Input placeholder="Marca del repuesto" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="descripcion"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Descripción</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Descripción del repuesto" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
