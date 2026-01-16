@@ -11,6 +11,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
 import { Button } from "@/shared/ui/button";
@@ -129,6 +130,11 @@ export function RepuestosTable({
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
                                             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                                             <DropdownMenuItem onClick={() => onSolicitar(item)}>
+                                                 <ShoppingCart className="mr-2 h-4 w-4" />
+                                                 Solicitar
+                                             </DropdownMenuItem>
+                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem onClick={() => onEdit(item)}>
                                                 <Edit className="mr-2 h-4 w-4" />
                                                 Editar

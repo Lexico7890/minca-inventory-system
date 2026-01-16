@@ -29,8 +29,6 @@ import { useUserStore } from "@/entities/user";
 import { useRequestsStore } from "@/features/spares-request-workshop";
 import { toast } from "sonner";
 
-type ActionType = 'solicitar' | null;
-
 export function RepuestosPage() {
     // State for filters
     const [filters, setFilters] = useState<RepuestosParams>({
@@ -155,62 +153,40 @@ export function RepuestosPage() {
 
     const handleSubmitForm = async (formData: RepuestoFormData, selectedAction: ActionType) => {
         try {
-            // Determine if there are changes to save
-            const hasChanges = editingRepuesto
-                ? JSON.stringify(formData) !== JSON.stringify({
-                    referencia: editingRepuesto.referencia,
-                    nombre: editingRepuesto.nombre,
-                    cantidad_minima: editingRepuesto.cantidad_minima,
-                    descontinuado: editingRepuesto.descontinuado,
-                    tipo: editingRepuesto.tipo,
-                    fecha_estimada: editingRepuesto.fecha_estimada,
-                    url_imagen: editingRepuesto.url_imagen || "",
-                })
-                : true; // Always true for new items
+            const dataToSubmit: Partial<RepuestoFormData> = { ...formData };
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            delete (dataToSubmit as any)['cantidad_minima'];
 
-            if (!hasChanges && !selectedAction) {
+            const originalDataForComparison = editingRepuesto ? {
+                referencia: editingRepuesto.referencia,
+                nombre: editingRepuesto.nombre,
+                descontinuado: editingRepuesto.descontinuado,
+                tipo: editingRepuesto.tipo,
+                fecha_estimada: editingRepuesto.fecha_estimada,
+                url_imagen: editingRepuesto.url_imagen || "",
+            } : null;
+
+            const hasChanges = editingRepuesto
+                ? JSON.stringify(dataToSubmit) !== JSON.stringify(originalDataForComparison)
+                : true;
+
+            if (!hasChanges) {
                 toast.info("No hay cambios para guardar.");
                 setIsSheetOpen(false);
                 return;
             }
 
-            // Perform Update or Create
-            if (hasChanges) {
-                if (editingRepuesto) {
-                    await updateMutation.mutateAsync({ id: editingRepuesto.id_repuesto, data: formData });
-                } else {
-                    await createMutation.mutateAsync(formData);
-                }
+            if (editingRepuesto) {
+                await updateMutation.mutateAsync({ id: editingRepuesto.id_repuesto, data: dataToSubmit });
+            } else {
+                await createMutation.mutateAsync(dataToSubmit as RepuestoFormData);
             }
 
-            // Handle Action
-            if (selectedAction === 'solicitar' && editingRepuesto) {
-                if (!sessionData?.user?.id || !currentLocation?.id_localizacion) {
-                    toast.error("No se pudo identificar al usuario o localización para la solicitud.");
-                } else {
-                    await addItemToCart(
-                        sessionData.user.id,
-                        currentLocation.id_localizacion,
-                        editingRepuesto.id_repuesto
-                    );
-                    toast.success(`"${editingRepuesto.nombre}" agregado a solicitudes.`);
-                }
-            }
-
-            // Combine toast messages
-            if (hasChanges && selectedAction) {
-                toast.success("Repuesto actualizado y solicitud enviada.");
-            } else if (!hasChanges && selectedAction) {
-                // This case is handled by the addItemToCart toast already
-            } else if (hasChanges && !selectedAction) {
-                toast.success(editingRepuesto ? "Repuesto actualizado." : "Repuesto creado.");
-            }
-
-
+            toast.success(editingRepuesto ? "Repuesto actualizado." : "Repuesto creado.");
             setIsSheetOpen(false);
         } catch (error) {
-            // Error is handled by the mutation hooks
-            console.error("Error en handleSubmitForm:", error)
+            // Error is handled by the mutation hooks, but good to log
+            console.error("Error en handleSubmitForm:", error);
         }
     };
 
