@@ -11,7 +11,7 @@ import { AppSidebar } from "@/widgets/nav";
 import { NotificationsMenu } from "@/widgets/notifications";
 import { ProtectedRoute } from "../providers/ProtectedRoute";
 import { MovementHistoryPage } from "@/pages/inventario";
-import { InventoryPage } from "@/pages/inventario/ui/InventoryPage";
+import InventoryPage from "@/pages/inventario/ui/InventoryPage";
 import { RepuestosPage } from "@/pages/spares";
 import { RecordsPage } from "@/pages/records";
 import Inventory from "@/pages/Inventory";
