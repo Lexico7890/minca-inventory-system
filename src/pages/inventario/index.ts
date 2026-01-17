@@ -1,5 +1,1 @@
-import InventoryPage from "./ui/InventoryPage";
-
-export {
-    InventoryPage
-}
+export * from './ui';
