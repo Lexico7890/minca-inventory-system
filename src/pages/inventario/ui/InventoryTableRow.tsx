@@ -2,8 +2,9 @@ import { Badge } from "@/shared/ui/badge";
 import { TableCell, TableRow } from "@/shared/ui/table";
 import { useState } from "react";
 import { Button } from "@/shared/ui/button";
-import { Pencil } from "lucide-react";
+import { Pencil, History } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { toast } from "sonner";
 import type { InventoryItem } from "@/entities/inventario";
@@ -70,14 +71,16 @@ export function InventoryTableRow({ item }: InventoryTableRowProps) {
                     {item.estado_stock || 'N/A'}
                 </Badge>
             </TableCell>
-            <TableCell>
-                {item.descontinuado ? (
-                    <Badge variant="destructive">Descontinuado</Badge>
-                ) : (
-                    <Badge variant="default" className="bg-green-600 hover:bg-green-700">
-                        Activo
-                    </Badge>
-                )}
+            <TableCell className="hidden text-center md:table-cell">
+                <Link to={`/inventario/movimientos/${item.referencia}`}>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                    >
+                        <History className="h-4 w-4" />
+                    </Button>
+                </Link>
             </TableCell>
             <TableCell>
                 <Button

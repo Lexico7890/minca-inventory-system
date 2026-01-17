@@ -94,8 +94,7 @@ export function InventoryTable({ items, orderBy, direction, onSort }: InventoryT
                             {getSortIcon('estado_stock')}
                         </Button>
                     </TableHead>
-
-                    <TableHead className="w-[120px]">Estado</TableHead>
+                    <TableHead className="w-[120px] hidden text-center md:table-cell">Movimientos</TableHead>
                     <TableHead className="w-[120px]">Acciones</TableHead>
                 </TableRow>
             </TableHeader>

@@ -10,7 +10,7 @@ import { LocationSelector } from "@/entities/locations";
 import { AppSidebar } from "@/widgets/nav";
 import { NotificationsMenu } from "@/widgets/notifications";
 import { ProtectedRoute } from "../providers/ProtectedRoute";
-import { InventoryPage } from "@/pages/inventario";
+import { InventoryPage, MovementHistoryPage } from "@/pages/inventario";
 import { RepuestosPage } from "@/pages/spares";
 import { RecordsPage } from "@/pages/records";
 import Inventory from "@/pages/Inventory";
@@ -121,6 +121,7 @@ function App() {
                         <Route path="/inventario" element={<Inventory />} />
                         <Route path="/inventario/conteo" element={<ConteoPage />} />
                         <Route path="/inventario/conteo/resultados" element={<ResultadosConteoPage />} />
+                        <Route path="/inventario/movimientos/:referencia" element={<MovementHistoryPage />} />
                       </Route>
 
                       <Route element={<ProtectedRoute routeKey="solicitudes" />}>

@@ -44,3 +44,25 @@ export interface AutocompleteInputProps {
     setSelected: (selection: { id_repuesto: string, referencia: string, nombre: string } | null) => void;
     id_localizacion: string | undefined;
 }
+
+export interface MovementHistoryItem {
+  id_repuesto: string;
+  id_localizacion: string;
+  id_localizacion_destino: string | null;
+  tipo_movimiento: string;
+  cantidad: number;
+  id_usuario_responsable: string;
+  estado: string;
+  fecha_movimiento: string;
+  created_at: string;
+  metadata: Record<string, any>;
+  referencia: string;
+  nombre_repuesto: string;
+  marca: string;
+  url_imagen: string;
+  descontinuado: boolean;
+  nombre_localizacion: string;
+  usuario_responsable: string;
+  email_usuario: string;
+  stock_acumulado: number;
+}
