@@ -6,6 +6,7 @@ import {
   ClipboardClock,
   LifeBuoy,
   Send,
+  SendToBack,
   Settings2,
   Warehouse,
 } from "lucide-react"
@@ -50,8 +51,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       items: [],
     },
     {
+      title: "Seguimiento ordenes",
+      url: "/ordenes",
+      icon: SendToBack,
+      permissionKey: "ordenes",
+      items: [],
+    },
+    {
       title: "Solicitudes",
-      url: "/solicitudes",
+      url: "#",
       icon: Send,
       permissionKey: "solicitudes",
       items: [

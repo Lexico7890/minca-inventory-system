@@ -21,6 +21,7 @@ import { RequestsCreatedPage } from "@/features/spares-request-workshop";
 import { RequestsSentPage } from "@/features/requests-sended";
 import { Toaster } from "sonner";
 import NotFound from "@/pages/NotFound";
+import { OrdersPage } from "@/pages/orders";
 //import "../styles/App.css";
 
 function App() {
@@ -114,6 +115,9 @@ function App() {
 
                       <Route element={<ProtectedRoute routeKey="registros" />}>
                         <Route path="/registros" element={<RecordsPage />} />
+                      </Route>
+                      <Route element={<ProtectedRoute routeKey="ordenes" />}>
+                        <Route path="/ordenes" element={<OrdersPage />} />
                       </Route>
 
                       {/* Note: 'inventario' route (legacy) might need a permission check or just link to 'mi_inventario' perm?
