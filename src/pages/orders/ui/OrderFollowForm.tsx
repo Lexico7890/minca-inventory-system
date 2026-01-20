@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, Control } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateOrderFollow, useScooterTypes } from "../api/useOrderFollow";
@@ -65,8 +65,8 @@ export function OrderFollowForm() {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <FormField<FormValues>
-                            control={form.control}
+                        <FormField
+                            control={form.control as Control<FormValues>}
                             name="number"
                             render={({ field }) => (
                                 <FormItem>
@@ -89,8 +89,8 @@ export function OrderFollowForm() {
                             )}
                         />
 
-                        <FormField<FormValues>
-                            control={form.control}
+                        <FormField
+                            control={form.control as Control<FormValues>}
                             name="id_scooter_type"
                             render={({ field }) => (
                                 <FormItem>
@@ -130,8 +130,8 @@ export function OrderFollowForm() {
                         />
                     </div>
 
-                    <FormField<FormValues>
-                        control={form.control}
+                    <FormField
+                        control={form.control as Control<FormValues>}
                         name="level"
                         render={({ field }) => (
                             <FormItem>
