@@ -4,8 +4,7 @@ import { useUserStore } from "@/entities/user";
 import { MovementsWorkshopForm } from "@/features/record-save-movement";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import ListMovements from "./list-movements";
-import { GuaranteesForm } from "@/features/guarantees-create";
-import { GuaranteesDashboard } from "@/entities/guarantees";
+import ListGuarantees from "./list-guarantees";
 
 export function RecordsPage() {
   const { checkMenuPermission } = useUserStore();
@@ -36,9 +35,10 @@ export function RecordsPage() {
         </TabsContent>
 
         <TabsContent value="garantias">
-          <div className="mt-4 flex flex-col items-center">
-            <GuaranteesForm />
-            <GuaranteesDashboard />
+          <div className="gap-4 mt-4 flex flex-col">
+            <section className="flex justify-center items-center p-0 md:p-4">
+              <ListGuarantees />
+            </section>
           </div>
         </TabsContent>
       </Tabs>
