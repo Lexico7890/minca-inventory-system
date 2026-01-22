@@ -109,7 +109,7 @@ export function OrderFollowForm() {
                                                     <SelectValue placeholder="Seleccione un modelo" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className="bg-[#1a1a1a] border-white/10 text-gray-200">
+                                            <SelectContent className="bg-[#1a1a1a] border-white/10 text-gray-200 max-h-52 overflow-y-auto">
                                                 {loadingTypes ? (
                                                     <div className="p-4 text-sm text-gray-500 text-center">
                                                         Cargando...

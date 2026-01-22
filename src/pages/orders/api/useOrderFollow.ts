@@ -18,18 +18,50 @@ export const useScooterTypes = () => {
     });
 };
 
-export const useOrderFollowList = () => {
+interface Filters {
+    order?: string;
+    scooterType?: string;
+    level?: number;
+    page?: number;
+    pageSize?: number;
+}
+
+export const useOrderFollowList = ({
+    filters,
+}: {
+    filters: Filters;
+}) => {
     return useQuery({
-        queryKey: ["orderFollowList"],
+        queryKey: ["orderFollowList", filters],
         queryFn: async () => {
-            const { data, error } = await supabase
+            let query = supabase
                 .from("view_order_follow")
-                .select("*")
+                .select("*", { count: "exact" })
                 .eq("is_finish", false)
                 .order("created_at", { ascending: true });
 
+            if (filters.order) {
+                query = query.ilike("number", `%${filters.order}%`);
+            }
+
+            if (filters.scooterType) {
+                query = query.eq("id_scooter_type", filters.scooterType);
+            }
+
+            if (filters.level) {
+                query = query.eq("level", filters.level);
+            }
+
+            if (filters.page && filters.pageSize) {
+                const from = (filters.page - 1) * filters.pageSize;
+                const to = from + filters.pageSize - 1;
+                query = query.range(from, to);
+            }
+
+            const { data, error, count } = await query;
+
             if (error) throw error;
-            return data as ViewOrderFollow[];
+            return { data: data as ViewOrderFollow[], count };
         },
     });
 };
