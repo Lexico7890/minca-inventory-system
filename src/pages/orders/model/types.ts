@@ -13,6 +13,7 @@ export interface OrderFollow {
     level: number;
     is_finish: boolean;
     updated_at: string | null;
+    id_scooter_type: string;
 }
 
 export interface ViewOrderFollow {
