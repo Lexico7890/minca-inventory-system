@@ -3,6 +3,7 @@
 import * as React from "react"
 import {
   BookOpen,
+  Bot,
   ClipboardClock,
   LifeBuoy,
   Send,
@@ -72,6 +73,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: "/solicitudes/enviadas",
         },
       ],
+    },
+    {
+      title: "Dynamo",
+      url: "/dynamo",
+      icon: Bot,
+      items: [],
     },
     // Items sin 'permissionKey' se mostrarán siempre (o se pueden proteger con otra lógica)
     // Por ahora los ocultamos o dejamos como estáticos si no están en el objeto de permisos
