@@ -22,6 +22,7 @@ import { RequestsSentPage } from "@/features/requests-sended";
 import { Toaster } from "sonner";
 import NotFound from "@/pages/NotFound";
 import { OrdersPage } from "@/pages/orders";
+import { DynamoPage } from "@/pages/dynamo";
 //import "../styles/App.css";
 
 function App() {
@@ -135,6 +136,8 @@ function App() {
                           <Route path="enviadas" element={<RequestsSentPage />} />
                         </Route>
                       </Route>
+
+                      <Route path="/dynamo" element={<DynamoPage />} />
 
                       <Route path="*" element={<NotFound />} />
                     </Routes>

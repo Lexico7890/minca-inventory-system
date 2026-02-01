@@ -7,4 +7,5 @@ export const ROUTE_NAMES: Record<string, string> = {
     "/solicitudes/enviadas": "Solicitudes Enviadas",
     "/inventario": "Inventario (Legacy)",
     "/inventario/conteo": "Conteo de Inventario",
+    "/dynamo": "Dynamo",
 };
