@@ -63,7 +63,7 @@ export function DynamoPage() {
       {/* Título */}
       <div className="text-center space-y-2">
         <div className="flex items-center justify-center gap-3">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-red-500 via-red-600 to-red-700 bg-clip-text text-transparent">
+          <h1 className="text-3xl md:text-4xl font-bold bg-linear-to-r from-red-500 via-red-600 to-red-700 bg-clip-text text-transparent">
             Dynamo
           </h1>
           <Badge variant="outline" className="bg-red-500/10 text-red-500 border-red-500/20">
@@ -78,12 +78,12 @@ export function DynamoPage() {
       </div>
 
       {/* Contenedor del círculo con altura fija para evitar saltos */}
-      <div className="relative flex items-center justify-center h-64 md:h-72">
+      <div className="relative flex items-center justify-center h-56 md:h-64">
         {/* Ondas de animación cuando está activo */}
         {isActive && (
           <>
-            <div className="absolute w-48 h-48 md:w-64 md:h-64 rounded-full bg-gradient-to-r from-red-500/20 via-red-600/20 to-red-700/20 animate-ping" />
-            <div className="absolute w-44 h-44 md:w-56 md:h-56 rounded-full bg-gradient-to-r from-red-500/30 via-red-600/30 to-red-700/30 animate-pulse" />
+            <div className="absolute w-48 h-48 md:w-64 md:h-64 rounded-full bg-linear-to-r from-red-500/20 via-red-600/20 to-red-700/20 animate-ping" />
+            <div className="absolute w-44 h-44 md:w-56 md:h-56 rounded-full bg-linear-to-r from-red-500/30 via-red-600/30 to-red-700/30 animate-pulse" />
           </>
         )}
 
@@ -91,7 +91,7 @@ export function DynamoPage() {
         <div
           className={cn(
             "relative w-40 h-40 md:w-52 md:h-52 rounded-full p-1",
-            "bg-gradient-to-r from-red-500 via-red-600 to-red-700",
+            "bg-linear-to-r from-red-500 via-red-600 to-red-700",
             isActive && "animate-spin-slow",
             !isSupported && "opacity-50"
           )}
@@ -101,20 +101,20 @@ export function DynamoPage() {
             className={cn(
               "w-full h-full rounded-full flex items-center justify-center",
               "bg-background transition-all duration-300",
-              isActive && "bg-gradient-to-br from-red-900/50 via-red-800/50 to-red-900/50"
+              isActive && "bg-linear-to-br from-red-900/50 via-red-800/50 to-red-900/50"
             )}
           >
             {/* Ondas internas cuando está activo */}
             <div className="relative flex items-center justify-center">
               {isActive && (
-                <div className="absolute w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-r from-red-500/40 via-red-600/40 to-red-700/40 animate-pulse" />
+                <div className="absolute w-20 h-20 md:w-24 md:h-24 rounded-full bg-linear-to-r from-red-500/40 via-red-600/40 to-red-700/40 animate-pulse" />
               )}
 
               {/* Icono central */}
               <div
                 className={cn(
                   "relative z-10 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center",
-                  "bg-gradient-to-br from-red-500 via-red-600 to-red-700",
+                  "bg-linear-to-br from-red-500 via-red-600 to-red-700",
                   "shadow-lg shadow-red-500/25",
                   "transition-transform duration-200",
                   isListening && "scale-90"
@@ -129,8 +129,8 @@ export function DynamoPage() {
         {/* Efecto de resplandor */}
         <div
           className={cn(
-            "absolute inset-0 w-40 h-40 md:w-52 md:h-52 rounded-full m-auto",
-            "bg-gradient-to-r from-red-500/0 via-red-600/20 to-red-700/0",
+            "absolute inset-0 w-40 h-32 md:w-52 md:h-52 rounded-full m-auto",
+            "bg-linear-to-r from-red-500/0 via-red-600/20 to-red-700/0",
             "blur-xl transition-opacity duration-300",
             isActive ? "opacity-100" : "opacity-0"
           )}
@@ -138,7 +138,7 @@ export function DynamoPage() {
       </div>
 
       {/* Contenedor de mensajes con altura fija para evitar que el botón se mueva */}
-      <div className="h-20 flex items-center justify-center w-full max-w-md px-4">
+      <div className="flex items-center justify-center w-full max-w-md px-4">
         {/* Transcript en tiempo real */}
         {(isListening || isProcessing) && transcript ? (
           <div className="text-center px-4 py-2 rounded-lg bg-muted/50 border border-border w-full">
@@ -146,14 +146,14 @@ export function DynamoPage() {
           </div>
         ) : /* Error */ error ? (
           <div className="flex items-center gap-2 text-center px-4 py-3 rounded-lg bg-destructive/10 border border-destructive/20 w-full">
-            <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0" />
+            <AlertCircle className="w-5 h-5 text-destructive shrink-0" />
             <p className="text-sm text-destructive flex-1">{error.message}</p>
             {error.recoverable && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={clearError}
-                className="text-destructive hover:text-destructive flex-shrink-0"
+                className="text-destructive hover:text-destructive shrink-0"
               >
                 Cerrar
               </Button>
@@ -172,7 +172,7 @@ export function DynamoPage() {
         disabled={isDisabled}
         className={cn(
           "relative px-8 py-4 rounded-full font-semibold text-white",
-          "bg-gradient-to-r from-red-500 via-red-600 to-red-700",
+          "bg-linear-to-r from-red-500 via-red-600 to-red-700",
           "shadow-lg shadow-red-500/25",
           "transition-all duration-200 ease-out",
           "select-none touch-none",
@@ -214,12 +214,12 @@ export function DynamoPage() {
             error
               ? "bg-destructive"
               : isListening
-              ? "bg-red-500 animate-pulse"
-              : isProcessing
-              ? "bg-yellow-500 animate-pulse"
-              : isSpeaking
-              ? "bg-green-500 animate-pulse"
-              : "bg-muted-foreground/50"
+                ? "bg-red-500 animate-pulse"
+                : isProcessing
+                  ? "bg-yellow-500 animate-pulse"
+                  : isSpeaking
+                    ? "bg-green-500 animate-pulse"
+                    : "bg-muted-foreground/50"
           )}
         />
         <span className="max-w-xs truncate">{getStatusText()}</span>
