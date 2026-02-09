@@ -142,6 +142,24 @@
   }
 }
 
+/* Custom styles for inputs with gray text when filled */
+input:not(:placeholder-shown) {
+  color: #6b7280 !important;
+}
+
+/* Red gradient button */
+.btn-red-gradient {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%) !important;
+  border: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-red-gradient:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important;
+}
+
 /* Animaciones para Dynamo */
 @keyframes spin-slow {
   from {
