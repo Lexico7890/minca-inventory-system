@@ -5,7 +5,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/shared/ui/sideb
 import { Separator } from "@/shared/ui/separator";
 import { useUserStore, NoRoleModal } from "@/entities/user";
 import { ROUTE_NAMES } from "../constants";
-import { LoginPage, UpdatePasswordPage } from "@/pages/auth";
+import { AuthCallback, LoginPage, PendingApproval, UpdatePasswordPage } from "@/pages/auth";
 import { LocationSelector } from "@/entities/locations";
 import { AppSidebar } from "@/widgets/nav";
 import { NotificationsMenu } from "@/widgets/notifications";
@@ -136,9 +136,9 @@ function App() {
                           <Route path="enviadas" element={<RequestsSentPage />} />
                         </Route>
                       </Route>
-
+                      <Route path="/pending-approval" element={<PendingApproval />} />
+                      <Route path="/auth-callback" element={<AuthCallback />} />
                       <Route path="/dynamo" element={<DynamoPage />} />
-
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </div>
