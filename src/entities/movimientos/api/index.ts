@@ -1,7 +1,6 @@
 import { supabase } from "@/shared/api";
 import type { MovementFilters } from "../model/types";
-
-const id_localizacion = localStorage.getItem('minca_location_id');
+import { useUserStore } from "@/entities/user";
 
 export async function getListMovements(filters: MovementFilters) {
     const {
@@ -14,11 +13,12 @@ export async function getListMovements(filters: MovementFilters) {
         concept,
         downloaded
     } = filters;
+    const selectedLocationId = useUserStore.getState().selectedLocationId;
 
     let query = supabase
         .from('v_movimientos_detallados')
         .select('*', { count: 'exact' })
-        .eq('id_localizacion', id_localizacion)
+        .eq('id_localizacion', selectedLocationId)
         .order('fecha', { ascending: false }) // Como segundo criterio
         .range(0, 9);
 

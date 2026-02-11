@@ -1,12 +1,13 @@
+import { useUserStore } from "@/entities/user";
 import { supabase } from "@/shared/api";
 
-const id_localizacion = localStorage.getItem('minca_location_id');
 
 export async function getGarantiasDashboard() {
+    const selectedLocationId = useUserStore.getState().selectedLocationId;
     const { data, error } = await supabase
         .from('v_garantias_dashboard')
         .select('*')
-        .eq('id_localizacion', id_localizacion)
+        .eq('id_localizacion', selectedLocationId)
         .order('fecha_reporte', { ascending: false });
 
     if (error) {

@@ -13,11 +13,10 @@ export const useSupabaseAuthListener = () => {
   const clearSessionData = useUserStore((state) => state.clearSessionData);
 
   useEffect(() => {
-    // Verificar sesión inicial SOLO si no estamos en auth-callback
-    const initializeSession = async () => {
-      // NO cargar sesión si estamos en la página de callback
+    // Inicializar sesión si existe (para refresh de página)
+    const initSession = async () => {
+      // NO cargar si estamos en auth-callback (deja que AuthCallback lo maneje)
       if (location.pathname === '/auth-callback') {
-        console.log('🔄 En auth-callback, saltando inicialización de sesión');
         return;
       }
 
@@ -25,83 +24,45 @@ export const useSupabaseAuthListener = () => {
 
       if (session?.user) {
         try {
-          console.log('📌 Cargando sesión inicial...');
           const sessionData = await fetchUserSessionData(session.user);
           setSessionData(sessionData);
-          console.log('✅ Sesión inicial cargada');
         } catch (error) {
-          console.error('Error al cargar sesión inicial:', error);
+          console.error('Error loading initial session:', error);
         }
       }
     };
 
-    initializeSession();
+    initSession();
 
-    // Escuchar eventos de autenticación
+    // Listener simple - solo eventos esenciales
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('🔔 Auth event:', event, session?.user?.email);
+      console.log('Auth event:', event);
 
-      // NO procesar eventos SIGNED_IN si estamos en auth-callback
-      // Dejar que AuthCallback maneje la redirección
-      if (event === 'SIGNED_IN' && location.pathname === '/auth-callback') {
-        console.log('🔄 SIGNED_IN durante auth-callback, dejando que AuthCallback maneje');
-        return;
-      }
-
-      // Manejar login (después de que AuthCallback termine)
-      if (event === 'SIGNED_IN' && session?.user) {
-        try {
-          console.log('✅ Usuario autenticado, cargando datos...');
-          const sessionData = await fetchUserSessionData(session.user);
-          setSessionData(sessionData);
-          console.log('✅ Datos de sesión cargados');
-        } catch (error) {
-          console.error('Error al cargar datos de usuario:', error);
-          toast.error('Error al cargar datos de usuario.');
-        }
-      }
-
-      // Manejar recuperación de contraseña
+      // PASSWORD_RECOVERY: Usuario hizo clic en link de recuperación
       if (event === 'PASSWORD_RECOVERY' && session?.user) {
         try {
           const sessionData = await fetchUserSessionData(session.user);
           setSessionData(sessionData);
-          console.log('🔑 Sesión de recuperación cargada');
         } catch (error) {
-          console.error('Error al cargar datos en recuperación:', error);
+          console.error('Error on password recovery:', error);
           toast.error('Error al cargar datos de usuario.');
         }
       }
 
-      // Manejar cierre de sesión
+      // SIGNED_OUT: Usuario cerró sesión
       if (event === 'SIGNED_OUT') {
-        console.log('🚪 Usuario cerró sesión');
         clearSessionData();
-
-        // Solo redirigir si NO estamos ya en login o auth-callback
-        const currentPath = location.pathname;
-        if (currentPath !== '/login' && currentPath !== '/auth-callback') {
+        // Solo redirigir si no estamos en login o auth-callback
+        if (location.pathname !== '/login' && location.pathname !== '/auth-callback') {
           navigate('/login', { replace: true });
         }
       }
 
-      // Manejar actualización de usuario
-      if (event === 'USER_UPDATED' && session?.user) {
-        try {
-          console.log('👤 Usuario actualizado');
-          const sessionData = await fetchUserSessionData(session.user);
-          setSessionData(sessionData);
-        } catch (error) {
-          console.error('Error al actualizar datos:', error);
-        }
-      }
-
-      // Manejar token refrescado
-      if (event === 'TOKEN_REFRESHED') {
-        console.log('🔄 Token refrescado');
-      }
+      // TOKEN_REFRESHED: Token renovado automáticamente
+      // No necesitamos hacer nada aquí - Supabase ya actualizó el token
+      // y las próximas queries usarán el nuevo token automáticamente
     });
 
     return () => {

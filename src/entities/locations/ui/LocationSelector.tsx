@@ -4,12 +4,14 @@ import { Button } from '@/shared/ui/button';
 import { MapPin } from 'lucide-react';
 import { useUserStore, type UserLocation } from '@/entities/user';
 import { supabase } from '@/shared/api';
+import { useQueryClient } from '@tanstack/react-query';
 
 export function LocationSelector() {
-    const { currentLocation, setCurrentLocation, isAuthenticated, sessionData } = useUserStore();
+    const { currentLocation, setCurrentLocation, isAuthenticated, sessionData, setSelectedLocation } = useUserStore();
     const [locations, setLocations] = useState<UserLocation[]>([]);
     const [loading, setLoading] = useState(true);
     const savedLocationId = localStorage.getItem('minca_location_id');
+    const queryClient = useQueryClient();
 
     useEffect(() => {
         const initLocation = async () => {
@@ -73,8 +75,10 @@ export function LocationSelector() {
     }, [isAuthenticated, currentLocation, sessionData?.user?.id, setCurrentLocation, savedLocationId]);
 
     const handleSelectLocation = (location: UserLocation) => {
-        localStorage.setItem('minca_location_id', location.id_localizacion.toString());
+        debugger
+        setSelectedLocation(location.id_localizacion.toString());
         setCurrentLocation(location);
+        queryClient.invalidateQueries({ queryKey: ['inventory'] });
     };
 
     if ((!isAuthenticated || currentLocation) && savedLocationId) {
@@ -82,7 +86,7 @@ export function LocationSelector() {
     }
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-100 flex items-center justify-center bg-background/80 backdrop-blur-sm">
             <Card className="w-full max-w-md mx-4 shadow-lg border-2">
                 <CardHeader className="text-center space-y-2">
                     <div className="mx-auto bg-primary/10 p-3 rounded-full w-fit">

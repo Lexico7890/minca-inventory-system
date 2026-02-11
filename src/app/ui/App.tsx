@@ -28,7 +28,7 @@ import { DynamoPage } from "@/pages/dynamo";
 function App() {
   useSupabaseAuthListener();
   const location = useLocation();
-  const { isAuthenticated } = useUserStore();
+  const { isAuthenticated, getSelectedLocationId } = useUserStore();
 
   // Generate breadcrumbs based on current location
   const pathSegments = location.pathname.split("/").filter(Boolean);
@@ -43,6 +43,7 @@ function App() {
   // Always prepend Home/Inventory if distinct, but here '/' is Inventory.
   // If we are at root, breadcrumbs is empty.
   const isRoot = location.pathname === "/";
+  const locationId = getSelectedLocationId();
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -63,7 +64,7 @@ function App() {
             isAuthenticated ? (
               <SidebarProvider>
                 <NoRoleModal />
-                <LocationSelector />
+                {!locationId && <LocationSelector />}
                 <AppSidebar />
                 <SidebarInset>
                   <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4">

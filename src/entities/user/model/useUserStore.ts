@@ -85,6 +85,7 @@ interface UserStore {
   sessionData: SessionData | null;
   currentLocation: UserLocation | null;
   isAuthenticated: boolean;
+  selectedLocationId: string | null
 
   setSessionData: (data: SessionData | null) => void;
   setCurrentLocation: (location: UserLocation | null) => void;
@@ -96,6 +97,8 @@ interface UserStore {
   clearSessionData: () => void;
   isUserApproved: () => boolean;      // ← AGREGAR helper
   isUserActive: () => boolean;        // ← AGREGAR helper
+  setSelectedLocation: (locationId: string) => void // ← NUEVO
+  getSelectedLocationId: () => string | null // ← NUEVO
 }
 
 export const useUserStore = create<UserStore>()(
@@ -104,6 +107,7 @@ export const useUserStore = create<UserStore>()(
       sessionData: null,
       currentLocation: null,
       isAuthenticated: false,
+      selectedLocationId: null,
 
       setSessionData: (data) => {
         set({
@@ -115,7 +119,8 @@ export const useUserStore = create<UserStore>()(
       clearSessionData: () =>
         set({
           sessionData: null,
-          isAuthenticated: false
+          isAuthenticated: false,
+          selectedLocationId: null
         }),
 
       setCurrentLocation: (location) => set({ currentLocation: location }),
@@ -167,10 +172,26 @@ export const useUserStore = create<UserStore>()(
       isUserActive: () => {
         const state = get();
         return state.sessionData?.user.activo === true;
-      }
+      },
+
+      setSelectedLocation: (locationId) => {
+        set({ selectedLocationId: locationId })
+        // Opcional: también guardar en localStorage como backup
+        localStorage.setItem('minca_location_id', locationId)
+      },
+
+      getSelectedLocationId: () => {
+        const state = get()
+        return state.selectedLocationId
+      },
     }),
     {
       name: 'user-storage',
+      partialize: (state) => ({
+        sessionData: state.sessionData,
+        isAuthenticated: state.isAuthenticated,
+        selectedLocationId: state.selectedLocationId,
+      }),
       storage: createJSONStorage(() => localStorage),
     }
   )

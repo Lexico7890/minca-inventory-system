@@ -22,6 +22,7 @@ export function GuaranteesForm({ prefillData }: GuaranteesFormProps) {
   const { currentLocation, sessionData } = useUserStore();
   const createGuaranteeMutation = useCreateGuarantee();
   const location = useLocation();
+  console.log("sessionData", sessionData);
 
   // State for form fields
   const [orderNumber, setOrderNumber] = useState<string>("");
@@ -48,6 +49,7 @@ export function GuaranteesForm({ prefillData }: GuaranteesFormProps) {
     const data = prefillData || location.state?.warrantyData;
 
     console.log("GuaranteesForm effect. data:", data);
+    debugger
 
     if (data) {
       setCurrentWarrantyId(data.id_garantia || "");
