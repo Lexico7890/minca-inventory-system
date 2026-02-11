@@ -1,5 +1,6 @@
 import { supabase } from '@/shared/api/supabase';
 import type { InventoryItem, InventoryParams, PaginatedInventoryResponse } from '../model/types';
+import { useUserStore } from '@/entities/user';
 
 /**
  * Fetches paginated inventory data from Supabase view v_inventario_completo
@@ -19,9 +20,9 @@ export async function getInventory(
     } = params;
 
     // Get location dynamically and validate
-    const id_localizacion = localStorage.getItem('minca_location_id');
+    const selectedLocationId = useUserStore.getState().selectedLocationId;
 
-    if (!id_localizacion || id_localizacion === 'null') {
+    if (!selectedLocationId || selectedLocationId === 'null') {
         return {
             items: [],
             total_count: 0,
@@ -38,7 +39,7 @@ export async function getInventory(
     let query = supabase
         .from('v_inventario_completo')
         .select('*', { count: 'exact' })
-        .eq('id_localizacion', id_localizacion);
+        .eq('id_localizacion', selectedLocationId);
 
     // Apply search filter (search in nombre or referencia)
     if (search && search.trim()) {
@@ -92,16 +93,16 @@ export async function getInventory(
  * Get all inventory items (for autocomplete or dropdowns)
  */
 export async function getAllInventoryItems(): Promise<InventoryItem[]> {
-    const id_localizacion = localStorage.getItem('minca_location_id');
+    const selectedLocationId = useUserStore.getState().selectedLocationId;
 
-    if (!id_localizacion || id_localizacion === 'null') {
+    if (!selectedLocationId || selectedLocationId === 'null') {
         return [];
     }
 
     const { data, error } = await supabase
         .from('v_inventario_completo')
         .select('*')
-        .eq('id_localizacion', id_localizacion)
+        .eq('id_localizacion', selectedLocationId)
         .order('nombre', { ascending: true })
         .limit(1000);
 
@@ -153,16 +154,16 @@ export async function searchInventoryItems(query: string): Promise<InventoryItem
         return [];
     }
 
-    const id_localizacion = localStorage.getItem('minca_location_id');
+    const selectedLocationId = useUserStore.getState().selectedLocationId;
 
-    if (!id_localizacion || id_localizacion === 'null') {
+    if (!selectedLocationId || selectedLocationId === 'null') {
         return [];
     }
 
     const { data, error } = await supabase
         .from('v_inventario_completo')
         .select('*')
-        .eq('id_localizacion', id_localizacion)
+        .eq('id_localizacion', selectedLocationId)
         .or(`nombre.ilike.%${query}%,referencia.ilike.%${query}%`)
         .limit(50);
 
